@@ -29,5 +29,4 @@ pip install pynlfff
       + `NlfffPlotD3CutCake` 绘制三维磁场分量切面图
       + `nlfffPlotD3FieldLine` 绘制三维磁场磁力线 TODO
 
-因为工具包依赖较多，在大部分场景通常用不到所有功能，因此将依赖单独列出，需要时安装，可以使用`pynlfff.pyprepare.rcheck.RCheck()`检查依赖。
-
+因为工具包依赖较多，在大部分场景通常用不到所有功能，因此将依赖单独列出，需要时安装，可以使用`pynlfff.RCheck().check()`检查依赖。
