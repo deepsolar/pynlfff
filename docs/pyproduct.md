@@ -32,13 +32,15 @@ print(s)
 
 #### 读取Bout数据
 
+方法一：给定`Bout.bin`和对应的`grid.ini`文件
+
 ```python
 r = file.NlfffFile()
 
 bout_bin_path = r"\product0\Bout.bin"
 grid_path = r"\product0\grid3.ini"
 
-s = r.read_bin(bout_bin_path, grid_path)
+s = r.read_bin(bout_bin_path, grid_path=grid_path)
 print(s.shape)
 print(s)
 ```
@@ -61,22 +63,46 @@ print(s)
      -0.45711367  -0.45711367]]]]
 ```
 
+方法二：给定`Bout.bin`和对应的`nx`、`ny`、`nz`值
+```python
+r = file.NlfffFile()
+
+bout_bin_path = r"\product0\Bout.bin"
+nx=96
+ny=228
+nz=124
+
+s = r.read_bin(bout_bin_path, nx=nx,ny=ny,nz=nz)
+print(s.shape)
+print(s)
+```
 
 
 ### 写数据
 
 #### 转换文件格式为hdf5
 
+方法一：给定`Bout.bin`和对应的`grid.ini`文件，以及`hdf`文件保存路径
 ```python
 r = file.NlfffFile()
 
 bout_bin_path = r"\product0\Bout.bin"
 grid_path = r"\product0\grid3.ini"
 h5_path = r"\product0\Bxyz.h5"
-r.tran_bin2hdf5(bout_bin_path, grid_path, h5_path, overwrite=True)
+r.tran_bin2hdf5(bout_bin_path, h5_path, grid_path=grid_path, overwrite=True)
 ```
+方法二：给定`Bout.bin`和对应的`nx`、`ny`、`nz`值，以及`hdf`文件保存路径
+```python
+r = file.NlfffFile()
+bout_bin_path = r"\product0\Bout.bin"
+h5_path = r"\product0\Bxyz.h5"
 
+nx=96
+ny=228
+nz=124
 
+r.tran_bin2hdf5(bout_bin_path, h5_path, nx=nx,ny=ny,nz=nz, overwrite=True)
+```
 
 #### 写数组数据
 

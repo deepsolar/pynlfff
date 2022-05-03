@@ -40,7 +40,7 @@ class NlfffFile():
             self.float_format = "f"  # float
         self.data_hdf_dataset_name="Bxyz"
 
-    def check_bin_size_with_grid(self, bin_path, grid_path):
+    def check_bin_size_with_grid(self, bin_path, grid_path=None,nx=None,ny=None,nz=None):
         """
         check bin size agree with bin or not
         :param bin_path: the path for Bout.bin or B0.bin,include file's name
@@ -48,16 +48,20 @@ class NlfffFile():
         :return: True or False
         """
         result = False
-        if os.path.exists(bin_path) and os.path.exists(grid_path):
+        if isinstance(grid_path,str) and os.path.exists(bin_path) and os.path.exists(grid_path):
             bin_xyz_size = self.get_size_from_grid(grid_path)
-            bin_os_size = os.path.getsize(bin_path)
-            norm_size = 3 * self.float_size  # 24 like 24=3*8  three heft and 8byte for double
-            bin_com_size = bin_xyz_size[0] * bin_xyz_size[1] * bin_xyz_size[2] * norm_size
-            # like 10240 > 105371648 - (140 * 224 * 140 * 24) > 0
-            can_delta_max = 10240  # byte
-            can_delta_min = 0
-            if can_delta_max >= bin_os_size - bin_com_size >= can_delta_min:
-                result = True
+        elif isinstance(nx,int) and isinstance(ny,int) and isinstance(nz,int):
+            bin_xyz_size=[nx,ny,nz]
+        else:
+            raise Exception("grid_path or nx,ny,nz not given or illegal")
+        bin_os_size = os.path.getsize(bin_path)
+        norm_size = 3 * self.float_size  # 24 like 24=3*8  three heft and 8byte for double
+        bin_com_size = bin_xyz_size[0] * bin_xyz_size[1] * bin_xyz_size[2] * norm_size
+        # like 10240 > 105371648 - (140 * 224 * 140 * 24) > 0
+        can_delta_max = 10240  # byte
+        can_delta_min = 0
+        if can_delta_max >= bin_os_size - bin_com_size >= can_delta_min:
+            result = True
         return result
 
     def get_size_from_grid(self, grid_path):
@@ -129,25 +133,34 @@ class NlfffFile():
         # time.sleep(100)
         return pic
 
-    def read_bin(self, bin_path, grid_path, memmap=True):
+    def read_bin(self, bin_path, grid_path=None,nx=None,ny=None,nz=None, memmap=True):
         """
         read bin to numpy array shape like (3,nx,ny,nz)
         :param bin_path: the path of Bout.bin or B0.bin
         :param grid_path: the path of grid.ini
+        :param nx: the int value of nx
+        :param ny: the int value of ny
+        :param nz: the int value of nz
         :param memmap: True or False,default True, True use np.memmap
         :return: numpy array shape like (3,nx,ny,nz) ,or size is not ok return False
         """
         result = False
-        cz = self.check_bin_size_with_grid(bin_path, grid_path)
-        if cz:
+        if isinstance(grid_path,str) and os.path.exists(grid_path):
+            cz = self.check_bin_size_with_grid(bin_path, grid_path=grid_path)
             nxyz = self.get_size_from_grid(grid_path)
+        elif isinstance(nx,int) and isinstance(ny,int) and isinstance(nz,int):
+            cz = self.check_bin_size_with_grid(bin_path, nx=nx,ny=ny,nz=nz)
+            nxyz=[nx,ny,nz]
+        else:
+            raise Exception("grid_path or nx,ny,nz not given or illegal")
+        if cz:
             if memmap:  # like lazy load
                 result = self.__bin2array_with_nxyz_oneload_alldata_memmap(nxyz[0], nxyz[1], nxyz[2], bin_path)
             else:
                 result = self.__bin2array_with_nxyz_oneload_alldata_nomap(nxyz[0], nxyz[1], nxyz[2], bin_path)
         return result
 
-    def tran_bin2hdf5(self, bin_path, grid_path, hdf5_path, memmap=True, overwrite=True):
+    def tran_bin2hdf5(self, bin_path, hdf5_path, grid_path=None,nx=None,ny=None,nz=None, memmap=True, overwrite=True):
         """
         tran nlfff bin data to hdf5 format
         :param bin_path: the path of Bout.bin or B0.bin
@@ -158,7 +171,7 @@ class NlfffFile():
         :return: tran sucess will return True otherwise return False
         """
         result = False
-        data_array = self.read_bin(bin_path=bin_path, grid_path=grid_path, memmap=memmap)
+        data_array = self.read_bin(bin_path=bin_path, grid_path=grid_path,nx=nx,ny=ny,nz=nz, memmap=memmap)
         if data_array is not False:
             result = self.write_hdf5(data_array, hdf5_path, overwrite)
         return result
@@ -187,6 +200,8 @@ class NlfffFile():
                 #         hf.create_dataset("Bx", data=data_array[0])
                 #         hf.create_dataset("By", data=data_array[1])
                 #         hf.create_dataset("Bz", data=data_array[2])
+        else:
+            raise Exception("hdf5_path need end with .h5 or .hdf5")
         return result
 
     def read_hdf5(self, hdf5_path):
@@ -201,6 +216,8 @@ class NlfffFile():
             if hdf5_path.endswith(".h5") or hdf5_path.endswith(".hdf5"):
                 with h5py.File(hdf5_path, 'r') as hf:
                     result = hf[self.data_hdf_dataset_name][:]
+        else:
+            raise Exception("hdf5 file not exists")
         return result
 
 
@@ -255,17 +272,23 @@ class nlfffFind():
 
 if __name__ == "__main__":
     print("test")
-    bout_bin_path = r"C:\Users\Zander\PycharmProjects\pynlfff\test_data\product\product2\Bout.bin"
-    grid_path = r"C:\Users\Zander\PycharmProjects\pynlfff\test_data\product\product2\grid3.ini"
-    h5_path = r"C:\Users\Zander\PycharmProjects\pynlfff\test_data\product\product2\Bxyz.h5"
+    bout_bin_path = r"/home/zander/Desktop/Bout.bin"
+    grid_path = r"/home/zander/Desktop/grid3.ini"
+    h5_path = r"/home/zander/Desktop/Bxyz.h5"
+
     r = NlfffFile()
+
     s = r.get_size_from_grid(grid_path)
     print(s)
-    s = r.read_bin(bout_bin_path, grid_path)
-    print(s)
-    r.tran_bin2hdf5(bout_bin_path, grid_path, h5_path)
+
+    s2 = r.read_bin(bout_bin_path, grid_path)
+    s2 = r.read_bin(bout_bin_path,nx=204,ny=392,nz=224)
+    print(s2)
+
+    r.tran_bin2hdf5(bout_bin_path, h5_path, grid_path)
+    r.tran_bin2hdf5(bout_bin_path, h5_path, nx=204,ny=392,nz=224)
 
     a=np.random.uniform(-5, 5, size=(3, 100,50,40))
-    h5_path= r"C:\Users\Zander\PycharmProjects\pynlfff\test_data\product\product2\Bxyz2.h5"
+    h5_path= r"/home/zander/Desktop/Bxyz2.h5"
     r.write_hdf5(a,h5_path)
     # time.sleep(100)

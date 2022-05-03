@@ -338,8 +338,8 @@ if __name__ == "__main__":
     }
     # d3_drawer = NlfffPlotD3CutCake(**di)
     d3_drawer = NlfffPlotD3CutCake(figsize=(6, 6))
-    data_hdf_path =r"C:\Users\Zander\PycharmProjects\pynlfff\test_data\product\product1\Bxyz.h5"
-    picture_path=r"C:\Users\Zander\PycharmProjects\pynlfff\test_data\product\product1\NlfffPlotD3CutCake.png"
+    data_hdf_path =r"/home/zander/Desktop/Bxyz.h5"
+    picture_path=r"/home/zander/Desktop/NlfffPlotD3CutCake.png"
     load_result = d3_drawer.load_data_hdf(data_hdf_path)
     if load_result:
         # d3_drawer.colormap_mirror=True
