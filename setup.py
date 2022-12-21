@@ -1,5 +1,5 @@
 import pathlib
-from setuptools import setup
+from setuptools import setup, find_packages
 
 here = pathlib.Path(__file__).parent.resolve()
 
@@ -17,14 +17,7 @@ setup(
     author_email='zhaozhongrui21@mails.ucas.ac.cn',
     license='MIT',
     keywords='python nlfff',
-    packages=[
-        # 'pynlfff.pydownload',
-        'pynlfff.pyprepare',
-        'pynlfff.pypreprocess',
-        # 'pynlfff.pycomputer',
-        'pynlfff.pyproduct',
-        'pynlfff.pyplot',
-    ],
+    packages=find_packages(),
     install_requires=['numpy', 'h5py', 'matplotlib'],
     python_requires='>=3'
 )

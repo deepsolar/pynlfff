@@ -3,7 +3,7 @@ For small amounts of data, you can search and download directly from [Online Sea
 
 For data over 100GB (100GB-200TB), we recommend contacting us first via the email below, and then discussing transfer by mailing the hard disk, etc.
 
-+ Xu Long (`xszhu@bao.ac.cn`)
++ Long Xu (`xszhu@bao.ac.cn`)
 
 + Xin Huang (`huangxin@nssc.ac.cn`)
 

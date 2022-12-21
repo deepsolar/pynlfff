@@ -11,15 +11,11 @@
 
 We use [drms](https://github.com/mbobra/SHARPs) to download the [sharp cea](http://jsoc.stanford.edu/doc/data/hmi/sharp/sharp.htm) file (Bp.fits, Bt.fits, Br.fits) from [JSOC](http://jsoc.stanford.edu) as raw file and save it in the [raw-202203](https://figshare.com/articles/dataset/NLFFF_Dataset_Information/21760598?backTo=/collections/Archive_Information_of_Three-Dimensional_Solar_Magnetic_Fields_Dataset/6214666) folder, which can be found in [this article](https://todo.com) with detailed filtering criteria.
 
-> eg: [hmi.sharp_cea_720s.4900.20141210_124800_TAI.Bp.fits](https://nlfff-dataset.obs.cn-south-222.ai.pcl.cn/raw-202203/hmi.sharp_cea_720s_raw/num_4900_4999/hmi.sharp_cea_720s.4900.20141210_124800_TAI.Bp.fits)
-
-
 
 ## NLFFF File Data
 
 The product files are stored in the [archive-202203](https://figshare.com/articles/dataset/NLFFF_Dataset_Information/21760598?backTo=/collections/Archive_Information_of_Three-Dimensional_Solar_Magnetic_Fields_Dataset/6214666) folder, the folder naming convention can be found in this article or read in this sqlite database, each folder has the contents listed in the table below
 
-> eg: [hmi.sharp_cea_720s.4201.20140607_031200_TAI/Bout.bin](https://nlfff-dataset.obs.cn-south-222.ai.pcl.cn/archive-202203/grid3.done/num_4200_4299/hmi.sharp_cea_720s.4201.20140607_031200_TAI/Bout.bin)
 
 **You can also [filter and query here](http://database.deepsolar.space:18080/dbs/nlfff/). For small amounts of data (<100GB) you can try downloading directly through the web, for large amounts of data (100GB-200TB) we recommend contacting us first to deliver it by sending a hard drive, etc.**
 

@@ -14,6 +14,8 @@ Install
 
 ```bash
 pip install pynlfff
+# or
+pip install git+https://github.com/deepsolar/pynlfff.git
 ```
 
 Usage

@@ -4,7 +4,7 @@ site_name: NLFFF Dataset & pynlfff toolkit
 #   name: null
 #   custom_dir: 'material'
 nav:
-    - Home: index.md
+    - Home: home.md
     - Construction: construction.md
     - Download: download.md
     - Product: product.md
