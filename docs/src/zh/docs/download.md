@@ -14,15 +14,11 @@
 
 我们使用 [drms](https://github.com/mbobra/SHARPs) 从 [JSOC](http://jsoc.stanford.edu) 下载 [sharp cea](http://jsoc.stanford.edu/doc/data/hmi/sharp/sharp.htm) 文件 (包括Bp.fits, Bt.fits, Br.fits) 作为原始文件  [raw-202203](https://figshare.com/articles/dataset/NLFFF_Dataset_Information/21760598?backTo=/collections/Archive_Information_of_Three-Dimensional_Solar_Magnetic_Fields_Dataset/6214666) , 可以从[这篇文章](https://todo.com) 找到详细的筛选规则。
 
-> eg: [hmi.sharp_cea_720s.4900.20141210_124800_TAI.Bp.fits](https://nlfff-dataset.obs.cn-south-222.ai.pcl.cn/raw-202203/hmi.sharp_cea_720s_raw/num_4900_4999/hmi.sharp_cea_720s.4900.20141210_124800_TAI.Bp.fits)
-
-
 
 ## NLFFF文件
 
 产品文件存储在这个文件夹 [archive-202203](https://figshare.com/articles/dataset/NLFFF_Dataset_Information/21760598?backTo=/collections/Archive_Information_of_Three-Dimensional_Solar_Magnetic_Fields_Dataset/6214666) , 样本存储路径可以从数据库里面获得，每个样本通常包括下表这些文件。
 
-> eg: [hmi.sharp_cea_720s.4201.20140607_031200_TAI/Bout.bin](https://nlfff-dataset.obs.cn-south-222.ai.pcl.cn/archive-202203/grid3.done/num_4200_4299/hmi.sharp_cea_720s.4201.20140607_031200_TAI/Bout.bin)
 
 **你也可以 [在这里在线搜索下载](http://database.deepsolar.space:18080/dbs/nlfff/). 少量数据(<100GB) 可以直接从网络下载, 对于大量数据(100GB-200TB) 我们推荐先联系我们，然后通过邮寄硬盘等方式传递数据。**
 
