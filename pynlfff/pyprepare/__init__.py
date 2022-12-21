@@ -1,2 +1,3 @@
+# coding=utf-8
 
-__all__=["rcheck"]
+__all__=["prepare","disambiguation"]

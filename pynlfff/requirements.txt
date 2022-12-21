@@ -1,0 +1,21 @@
+# Requirements 
+# 推荐py37
+psutil
+drms
+sunpy
+astropy
+scipy
+numpy
+# sys
+# math
+argparse
+# datetime
+# json
+# urllib
+matplotlib
+requests
+matplotlib #mpl_toolkits
+
+# for label
+peewee
+wget

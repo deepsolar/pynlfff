@@ -264,8 +264,11 @@ if __name__ == "__main__":
     d = DownloadJsoc()
     file_path = r"/www/wwwroot/app_run/data/a"
     save_path = r"/www/wwwroot/app_run/data"
-    mail_list = ["zander_zhao@foxmail.com",
-                 "e.robot@outlook.com",
-                 "m-robot@outlook.com",
-                 "auto-robot@outlook.com", ]
+    mail_list = ["xxx@foxmail.com",
+                 "xxx@outlook.com",
+                 "xxxx@outlook.com",
+                 "xxxxx@outlook.com", ]
     d.demo_download_some_from_file(file_path, save_path, mail_list)
+
+
+
