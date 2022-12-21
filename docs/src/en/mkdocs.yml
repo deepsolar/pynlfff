@@ -134,9 +134,9 @@ theme:
       toggle:
         icon: material/brightness-4
         name: Switch to light mode
-  font:
-    text: Roboto
-    code: Roboto Mono
+  font: false
+    # text: Roboto
+    # code: Roboto Mono
   favicon: http://www.nssc.cas.cn/images/logo.png
   icon:
     logo: logo
