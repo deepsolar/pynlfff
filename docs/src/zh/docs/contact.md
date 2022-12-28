@@ -6,7 +6,7 @@
 
 对于超过100GB的数据（100GB-200TB），我们推荐先通过下面邮件联系我们，再讨论通过邮寄硬盘等方式传输。
 
-+ 徐龙 (`xszhu@bao.ac.cn`)
++ 徐龙 (`lxu@nao.cas.cn`)
 
 + 黄鑫 (`huangxin@nssc.ac.cn`)
 

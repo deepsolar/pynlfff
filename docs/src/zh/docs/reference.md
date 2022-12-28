@@ -5,7 +5,7 @@ TODO
 
 ## Algorithms used
 
-我们使用Wiegelmann的非线性无力冠状磁场（[NLFFF](https://doi.org/10.1007/s11207-012-9966-z) 外推算法进行外推。
+我们使用Wiegelmann的非线性无力冠状磁场[NLFFF](https://doi.org/10.1007/s11207-012-9966-z) 外推算法进行外推。
 
 ```tex
 @article{Wiegelmann2012Nov,
