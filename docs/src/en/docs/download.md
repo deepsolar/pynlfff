@@ -4,7 +4,7 @@
 
 [Summary Information](https://doi.org/10.6084/m9.figshare.c.6214666)
 
-[Search Online](http://database.deepsolar.space:18080/dbs/nlfff/)
+[Search Online and Download](http://database.deepsolar.space:18080/dbs/nlfff/?status=done)
 
 
 ## Raw File Data
