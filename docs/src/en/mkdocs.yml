@@ -1,57 +1,3 @@
-site_name: NLFFF Dataset & pynlfff toolkit
-# theme:
-#   # name: material
-#   name: null
-#   custom_dir: 'material'
-nav:
-    - Home: home.md
-    - Construction: construction.md
-    - Download: download.md
-    - Product: product.md
-    - Toolkit: toolkit.md
-    - Changelog: changelog.md
-    - Reference: reference.md
-    - Contact: contact.md
-
-#     - 准备包: 'pyprepare.md'
-# #    - 原始数据下载: 'pydownload.md'
-# #    - 预处理: 'pypreprocess.md'
-# #    - 计算: 'pycomputer.md'
-#     - 产品使用: 'pyproduct.md'
-#     - 图像绘制: 'pyplot.md'
-# #    - 校验: 'shcheck.md'
-# #    - 数据支持: 'support.md'
-
-# nav:
-#     - HOME: zh/index.md
-#     - 简介: zh/index.md
-#     - 准备包: 'pyprepare.md'
-# #    - 原始数据下载: 'pydownload.md'
-# #    - 预处理: 'pypreprocess.md'
-# #    - 计算: 'pycomputer.md'
-#     - 产品使用: 'pyproduct.md'
-#     - 图像绘制: 'pyplot.md'
-# #    - 校验: 'shcheck.md'
-# #    - 数据支持: 'support.md'
-
-# markdown_extensions:
-#   - admonition
-site_announce: Data release is in beta stage and may be unstable!
-
-# extra:
-#   alternate:
-#     - name: English
-#       link: /en/ 
-#       lang: en
-#     - name: 简体中文
-#       link: /zh/
-#       lang: zh
-
-
-#https://www.mkdocs.org/user-guide/writing-your-docs/#configure-pages-and-navigation
-
-
-
 # Copyright (c) 2016-2022 Martin Donath <martin.donath@squidfunk.com>
 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -76,15 +22,27 @@ site_announce: Data release is in beta stage and may be unstable!
 # site_name: Material for MkDocs
 site_url: https://nlfff.dataset.deepsolar.space/
 site_author: Zhongrui Zhao & Xinze Zhang
+site_name: NLFFF Dataset & pynlfff toolkit
 site_description: >-
   A Large-Scale Nonlinear Force-Free Field Three-Dimensional Magnetic Fields Data of Solar Active Regions
-announce: ddd
+announce: Data release is in beta stage and may be unstable!
 # Repository
 repo_name: deepsolar/pynlfff
 repo_url: https://github.com/deepsolar/pynlfff
 
+# Nav
+nav:
+    - Home: home.md
+    - Construction: construction.md
+    - Download: download.md
+    - Product: product.md
+    - Toolkit: toolkit.md
+    - Changelog: changelog.md
+    - Reference: reference.md
+    - Contact: contact.md
+
 # Copyright
-copyright: Copyright &copy; 2021 - 2022 National Space Science Center, Chinese Academy of Sciences
+copyright: Copyright &copy; 2021 - 2023 National Space Science Center, Chinese Academy of Sciences
 
 # Configuration
 theme:
@@ -164,14 +122,10 @@ extra:
   social:
     - icon: fontawesome/brands/github
       link: https://github.com/deepsolar/pynlfff
-    # - icon: fontawesome/brands/gitter
-    #   link: https://gitter.im/squidfunk/mkdocs-material
-    # - icon: fontawesome/brands/docker
-    #   link: https://hub.docker.com/r/squidfunk/mkdocs-material/
     - icon: fontawesome/brands/python
       link: https://pypi.org/project/pynlfff/
-    # - icon: fontawesome/brands/twitter
-    #   link: https://twitter.com/squidfunk
+    - icon: fontawesome/brands/gitter
+      link: https://gitter.im/deepsolar/pynlfff
   alternate:
     - name: English
       link: /en/ 
@@ -220,72 +174,5 @@ markdown_extensions:
       custom_checkbox: true
   - pymdownx.tilde
 
-# # Page tree
-# nav:
-#   - Home: index.md
-#   - Getting started:
-#     - Installation: getting-started.md
-#     - Creating your site: creating-your-site.md
-#     - Publishing your site: publishing-your-site.md
-#     - Customization: customization.md
-#     - Browser support: browser-support.md
-#     - Philosophy: philosophy.md
-#     - Alternatives: alternatives.md
-#     - License: license.md
-#     - Changelog:
-#       - changelog/index.md
-#       - How to upgrade: upgrade.md
-#   - Setup:
-#     - Changing the colors: setup/changing-the-colors.md
-#     - Changing the fonts: setup/changing-the-fonts.md
-#     - Changing the language: setup/changing-the-language.md
-#     - Changing the logo and icons: setup/changing-the-logo-and-icons.md
-#     - Ensuring data privacy: setup/ensuring-data-privacy.md
-#     - Setting up navigation: setup/setting-up-navigation.md
-#     - Setting up site search: setup/setting-up-site-search.md
-#     - Setting up site analytics: setup/setting-up-site-analytics.md
-#     - Setting up social cards: setup/setting-up-social-cards.md
-#     - Setting up a blog: setup/setting-up-a-blog.md
-#     - Setting up tags: setup/setting-up-tags.md
-#     - Setting up versioning: setup/setting-up-versioning.md
-#     - Setting up the header: setup/setting-up-the-header.md
-#     - Setting up the footer: setup/setting-up-the-footer.md
-#     - Adding a git repository: setup/adding-a-git-repository.md
-#     - Adding a comment system: setup/adding-a-comment-system.md
-#     - Building for offline usage: setup/building-for-offline-usage.md
-#     - Extensions:
-#       - setup/extensions/index.md
-#       - Python Markdown: setup/extensions/python-markdown.md
-#       - Python Markdown Extensions: setup/extensions/python-markdown-extensions.md
-#   - Reference:
-#     - reference/index.md
-#     - Admonitions: reference/admonitions.md
-#     - Annotations: reference/annotations.md
-#     - Buttons: reference/buttons.md
-#     - Code blocks: reference/code-blocks.md
-#     - Content tabs: reference/content-tabs.md
-#     - Data tables: reference/data-tables.md
-#     - Diagrams: reference/diagrams.md
-#     - Footnotes: reference/footnotes.md
-#     - Formatting: reference/formatting.md
-#     - Grids: reference/grids.md
-#     - Icons, Emojis: reference/icons-emojis.md
-#     - Images: reference/images.md
-#     - Lists: reference/lists.md
-#     - MathJax: reference/mathjax.md
-#     - Tooltips: reference/tooltips.md
-#   - Insiders:
-#     - insiders/index.md
-#     - Getting started:
-#       - Installation: insiders/getting-started.md
-#       - Changelog: insiders/changelog.md
-#   - Blog:
-#     - blog/index.md
-#     - 2022:
-#       - blog/posts/blog-support-just-landed.md
-#       - blog/posts/chinese-search-support.md
-#     - 2021:
-#       - blog/posts/the-past-present-and-future.md
-#       - blog/posts/excluding-content-from-search.md
-#       - blog/posts/search-better-faster-smaller.md
+
 
