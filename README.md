@@ -1,5 +1,7 @@
 # NLFFF 3D Dataset
 
+[![Join the chat at https://gitter.im/deepsolar/pynlfff](https://badges.gitter.im/deepsolar/pynlfff.svg)](https://gitter.im/deepsolar/pynlfff?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 > [A Large-Scale Nonlinear Force-Free Field Three-Dimensional Magnetic Fields Data of Solar Active Regions](https://nlfff.dataset.deepsolar.space)
 
 Based on the vector magnetic field data observed by Helioseismic and Magnetic Imager([HMI](http://hmi.stanford.edu)) on the Solar Dynamics Observatory (SDO), we have built a 3D solar  active region magnetic field dataset using the Nonlinear Force-Free  Coronal Magnetic Field ([NLFFF](https://doi.org/10.1007/s11207-012-9966-z))Extrapolations.
