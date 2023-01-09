@@ -7,7 +7,7 @@
 
 [数据集摘要信息](https://doi.org/10.6084/m9.figshare.c.6214666)
 
-[在线搜索及下载](http://database.deepsolar.space:18080/dbs/nlfff/?status=done)
+[在线搜索及下载](http://database.deepsolar.space:18080/dbs/nlfff)
 
 
 ## 原始数据

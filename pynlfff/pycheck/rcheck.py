@@ -11,17 +11,19 @@ Usage:     This code depends on None
 
 Examples:  None Now
 
-Adapted:   ZhaoZhongRui (zhaozhongrui21@mails.ucas.ac.cn) Edit Python code From Thomas Wiegelmann (2022.03)
+Adapted:   ZhaoZhongRui (zhaozhongrui21@mails.ucas.ac.cn) 
 
 """
-
+import os
+import subprocess
+import sys
 
 class RCheck():
     """
     check pynlfff some function needed module is install or not
     """
 
-    def __init__(self, version="0.2.0", print_try_log=True):
+    def __init__(self, version="0.3.2", print_try_log=True,try_install=True):
         """
         version default now, can use for different version test latter,
         print test log can show display or not
@@ -33,6 +35,7 @@ class RCheck():
         self.__requirements_list = []
         self.__load_data()
         self.print_try_log = print_try_log  # print log or not
+        self.try_install=try_install
 
     def __load_data(self):
         """
@@ -41,6 +44,8 @@ class RCheck():
         """
         if self.version == "0.2.0":
             self.__data_v02()
+        if self.version == "0.3.2":
+            self.__data_v03()
         else:
             print("no that version: {}".format(self.version))
 
@@ -60,20 +65,50 @@ class RCheck():
         ]
         d = self.__full_list
         self.__requirements_base = [d[2]]
-        self.__requirements_preprocess = [d[0], d[1], d[2], d[3], d[4]]
+        self.__requirements_prepare = [d[0], d[1], d[2], d[3], d[4]]
         self.__requirements_computer = []
         self.__requirements_product = [d[5], d[2]]
         self.__requirements_plot = [d[5], d[6], d[2]]
         self.__requirements_list = [
             self.__full_list,  # 0
             self.__requirements_base,  # 1
-            self.__requirements_preprocess,  # 2
+            self.__requirements_prepare,  # 2
             self.__requirements_computer,  # 3
             self.__requirements_product,  # 4
             self.__requirements_plot  # 5
         ]
         self.__data_is_load = True
 
+    def __data_v03(self):
+        """
+        load v02 data
+        :return: None
+        """
+        self.__full_list = [
+            ["pandas", "", ""],  # 0
+            ["astropy", "", ""],  # 1
+            ["numpy", "", ""],  # 2
+            ["sunpy", "", ""],  # 3
+            ["drms", "", ""],  # 4
+            ["h5py", "", ""],  # 5
+            ["matplotlib", "", ""],  # 6
+        ]
+        d = self.__full_list
+        self.__requirements_base = [d[2]]
+        self.__requirements_prepare = [d[0], d[1], d[2], d[3], d[4]]
+        self.__requirements_computer = []
+        self.__requirements_product = [d[5], d[2]]
+        self.__requirements_plot = [d[5], d[6], d[2]]
+        self.__requirements_list = [
+            self.__full_list,  # 0
+            self.__requirements_base,  # 1
+            self.__requirements_prepare,  # 2
+            self.__requirements_computer,  # 3
+            self.__requirements_product,  # 4
+            self.__requirements_plot  # 5
+        ]
+        self.__data_is_load = True
+        
     def h(self):
         """
         print help
@@ -89,11 +124,11 @@ class RCheck():
         help_str = """This module is to test some module, for pynlfff which function you need, is install or not.
     Can use RCheck().check() or RCheck().check(0) for Full module test
     RCheck().check(1) for Base function module test 
-    RCheck().check(2) for Preprocess function module test 
+    RCheck().check(2) for Prepare function module test 
     RCheck().check(3) for Computer function module test 
     RCheck().check(4) for Product function module test 
     RCheck().check(5) for Plot function module test 
-    """  # Full Base  Preprocess  Computer Product  Plot
+    """  # Full Base  Prepare  Computer Product  Plot
         print(help_str)
 
     def check_one_module_exists_by_try(self, model_name):
@@ -124,6 +159,8 @@ class RCheck():
 
         exists_str = "Need Install"
         is_exists = self.check_one_module_exists_by_try(model_name)
+        if self.print_try_log:
+            print(is_exists)
         if is_exists:
             exists_str = "Exists"
 
@@ -134,7 +171,7 @@ class RCheck():
         """
         given function index num to check this function's requirements is install or not,
         the num can use RCheck().help() or RCheck().h() to get details.
-        :param num: int 0 to 5, 0:Full 1:Base  2:Preprocess  3:Computer 4:Product  5:Plot
+        :param num: int 0 to 5, 0:Full 1:Base  2:Prepare  3:Computer 4:Product  5:Plot
         :return: print result and return test list , error num will return False
         """
         result = False
@@ -148,8 +185,26 @@ class RCheck():
                 result_list.append(this_result)
             if self.print_try_log:
                 print("Test Finish, Result: {}".format(result_list))
-            for r in result_list:
-                print(r)
+                
+            if self.try_install:
+                install_fail_list=[]
+                for r in result_list:
+                    if self.print_try_log:
+                        print(r)
+                    if r[1]=="Need Install":
+                        try:
+                            # os.system("{} -m pip install {}".format(sys.executable,r[0]))
+                            command="{} -m pip install {}".format(sys.executable,r[0])
+                            ret=subprocess.run(command, shell=True)
+                            if ret.returncode==0:
+                                print("install sucess {}".format(r[0]))
+                            else:
+                                print("install fail {}".format(r[0]))
+                                install_fail_list.append(r)
+                        except BaseException as e:
+                            print(e)
+                if len(install_fail_list)>0:
+                    print("=====\ninstall fail: {}".format(install_fail_list))
             result = result_list
         else:
             print("ERROR num: {}\ntry use function RCheck.h() or RCheck.help()".format(num))
@@ -159,5 +214,5 @@ class RCheck():
 if __name__ == "__main__":
     print("start test")
     # rc=RCheck()
-    RCheck().h()
-    RCheck().check()
+    # RCheck(print_try_log=False).h()
+    RCheck(print_try_log=False).check()
