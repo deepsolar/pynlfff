@@ -13,7 +13,7 @@ setup(
     long_description=long_description,
     long_description_content_type='text/markdown',
     url='https://github.com/deepsolar/pynlfff',
-    author='ZhaoZhongRui',
+    author='ZhongRui Zhao, Xinze Zhang',
     author_email='zhaozhongrui21@mails.ucas.ac.cn',
     license='MIT',
     keywords='python nlfff',

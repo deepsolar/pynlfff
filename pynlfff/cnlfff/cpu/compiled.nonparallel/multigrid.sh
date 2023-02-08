@@ -14,7 +14,7 @@ CHECKENERGY=checkenergy
 
 echo "BASE INFORMATION:"
 echo "File name:        linff run log"
-echo "App file name:    $0"  # this program path (default)
+echo "App file name:    $0"             # this program path (default)
 echo "Compute platform: "
 lscpu | grep -i byte
 uname -a
@@ -53,13 +53,13 @@ then
     cp grid1.ini grid.ini
     cp allboundaries1.dat allboundaries.dat
     cp mask1.dat mask.dat
-    $LR_RUN_DIR/$RELAX 23 0
-    $LR_RUN_DIR/$RELAX 40 10000
+    $LR_RUN_DIR/$RELAX 23 0             # potential field
+    $LR_RUN_DIR/$RELAX 40 10000         # NLFFF
     $LR_RUN_DIR/$CHECKQUALITY Bout.bin
     cp step.log step1.log
     cp prot.log prot1.log
     cp NLFFFquality.log NLFFFquality1.log
-    touch "done1.txt"  # flag
+    touch "done1.txt"                   # flag
 fi
 
 
@@ -74,8 +74,8 @@ then
     cp 'step.log' 'step2.log'
     cp 'prot.log' 'prot2.log'
     cp 'NLFFFquality.log' 'NLFFFquality2.log'
-    $LR_RUN_DIR/$FFTPOT  # grid2不进行这个计算也行
-    $LR_RUN_DIR/$CHECKENERGY B0.bin Bout.bin # grid2不进行这个计算也行
+    $LR_RUN_DIR/$FFTPOT                 # grid2 is fine without this calculation
+    $LR_RUN_DIR/$CHECKENERGY B0.bin Bout.bin    # grid2 is fine without this calculation
     touch "done2.txt"
 fi
 
@@ -85,18 +85,17 @@ then
     cp 'grid3.ini' 'grid.ini'
     cp 'allboundaries3.dat' 'allboundaries.dat'
     cp 'mask3.dat' 'mask.dat'
-    $LR_RUN_DIR/$REBIN Bout.bin B0.bin  # 将Bout rebain为B0，作为初始化条件，这个B0不是势场文件
-    $LR_RUN_DIR/$RELAX 40 10000 # nlfff     doc is old
+    $LR_RUN_DIR/$REBIN Bout.bin B0.bin  # Bout rebain as B0, as the initialization condition, this B0 is not the potential field file
+    $LR_RUN_DIR/$RELAX 40 10000         # nlfff     doc is old
     $LR_RUN_DIR/$CHECKQUALITY Bout.bin
     cp 'step.log' 'step3.log'
     cp 'prot.log' 'prot3.log'
     cp 'NLFFFquality.log' 'NLFFFquality3.log'
-    $LR_RUN_DIR/$FFTPOT   # 产生势场文件，这个B0才是势场文件
-    $LR_RUN_DIR/$CHECKENERGY B0.bin Bout.bin # 对比势场和非线性无力场能量差异
+    $LR_RUN_DIR/$FFTPOT                 # Generate potential field file, this B0 is the potential field file
+    $LR_RUN_DIR/$CHECKENERGY B0.bin Bout.bin    # Contrasting potential field and nonlinear force-free field energy differences
     touch "done.txt"
 fi
 
-# B0.bin  
 
 echo "================================================"
 

@@ -1,6 +1,6 @@
 import pynlfff
 
-# ck=pynlfff.pyprepare.rcheck.RCheck()
+# ck=pynlfff.pycheck.rcheck.RCheck()
 ck=pynlfff.RCheck()
 ck.help()
-ck.check(4)
+ck.check(0)

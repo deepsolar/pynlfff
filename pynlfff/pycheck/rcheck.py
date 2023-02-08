@@ -62,20 +62,24 @@ class RCheck():
             ["drms", "", ""],  # 4
             ["h5py", "", ""],  # 5
             ["matplotlib", "", ""],  # 6
+
+
+
         ]
         d = self.__full_list
         self.__requirements_base = [d[2]]
         self.__requirements_prepare = [d[0], d[1], d[2], d[3], d[4]]
-        self.__requirements_computer = []
+        self.__requirements_computer = [d[7]]
         self.__requirements_product = [d[5], d[2]]
         self.__requirements_plot = [d[5], d[6], d[2]]
+
         self.__requirements_list = [
             self.__full_list,  # 0
             self.__requirements_base,  # 1
             self.__requirements_prepare,  # 2
             self.__requirements_computer,  # 3
             self.__requirements_product,  # 4
-            self.__requirements_plot  # 5
+            self.__requirements_plot,  # 5
         ]
         self.__data_is_load = True
 
@@ -92,6 +96,18 @@ class RCheck():
             ["drms", "", ""],  # 4
             ["h5py", "", ""],  # 5
             ["matplotlib", "", ""],  # 6
+            ["psutil", "", ""],  # 7
+
+            ["requests", "", ""],  # 8
+            ["bs4", "", ""],  # 9
+            ["lxml", "", ""],  # 10
+            ["zeep", "", ""],  # 11
+
+            ["wget", "", ""],  # 12
+            ["peewee", "", ""],  # 13
+
+            
+            ["", "", ""],  # 
         ]
         d = self.__full_list
         self.__requirements_base = [d[2]]
@@ -99,13 +115,19 @@ class RCheck():
         self.__requirements_computer = []
         self.__requirements_product = [d[5], d[2]]
         self.__requirements_plot = [d[5], d[6], d[2]]
+        self.__requirements_download = [d[1],d[3],d[4],d[8], d[9], d[10], d[11]]
+        self.__requirements_label = [d[2],d[12],d[13]]
+
+
         self.__requirements_list = [
             self.__full_list,  # 0
             self.__requirements_base,  # 1
             self.__requirements_prepare,  # 2
             self.__requirements_computer,  # 3
             self.__requirements_product,  # 4
-            self.__requirements_plot  # 5
+            self.__requirements_plot,  # 5
+            self.__requirements_download, # 6
+            self.__requirements_label, # 7
         ]
         self.__data_is_load = True
         
@@ -128,6 +150,8 @@ class RCheck():
     RCheck().check(3) for Computer function module test 
     RCheck().check(4) for Product function module test 
     RCheck().check(5) for Plot function module test 
+    RCheck().check(6) for Download fits raw data function module test 
+    RCheck().check(7) for Label function module test 
     """  # Full Base  Prepare  Computer Product  Plot
         print(help_str)
 
@@ -171,7 +195,7 @@ class RCheck():
         """
         given function index num to check this function's requirements is install or not,
         the num can use RCheck().help() or RCheck().h() to get details.
-        :param num: int 0 to 5, 0:Full 1:Base  2:Prepare  3:Computer 4:Product  5:Plot
+        :param num: int 0 to 5, 0:Full 1:Base  2:Prepare  3:Computer 4:Product  5:Plot 6:Download raw fits 7:Label
         :return: print result and return test list , error num will return False
         """
         result = False
