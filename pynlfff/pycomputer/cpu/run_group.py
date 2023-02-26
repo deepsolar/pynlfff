@@ -29,8 +29,8 @@ def quality_is_ok(file_path):
         with open(file_path, 'r')as f:
             file_data = f.read()
         # print(file_data)
-        pattern = r'Angle.*?Degree'  # 模式字符串
-        string = file_data  # 要匹配的字符串
+        pattern = r'Angle.*?Degree'  # Pattern String
+        string = file_data  # String to match
         match = re.findall(pattern, string)
         # print(match)
         p = r'\d+\.?\d+'
@@ -59,24 +59,16 @@ class QueueManager(managers.BaseManager):
         self.this_address = None
         self.port = server_port
         self.get_address()
-        # address=('127.0.0.1', 5000), authkey=b'abc', serializer='pickle',ctx=None
-        authkey = None
-        # authkey=b'\xb5Z\xa5\x08)\xfa\xbf\xfd\xdc\xf8`\x9b\x99\x99\x91-_\x1a\xe8vI\r\x8f\xd4=\r\xb2\x00\x07\x98n!'
-        # authkey = b'\xc9\xd8\xb4\xb7\xc54.\x95\xcf\x08\xc3\x93&\xa6\xfb_<\x9fdl\\\xcc\xba\xe1\x0f\xb1U~\xcbF\xcbl'# None #b'i\xe4\xbf\\W\x18\xf8\x12\xba\xbd@!Y\xd1\xf0\x00\xdd\x92\x8f\xe1\x175\xd8\xfe$\xc4\\1\xc5<\x83\x07' #None #b'010'
         authkey = b"1001"
         serializer = 'pickle'
         ctx = None
         print(self.this_address)
         super().__init__(address=self.this_address, authkey=authkey, serializer=serializer, ctx=ctx)
-
         self.start_run()
 
     def init_server_queue(self):
-        # 发送任务队列
         manager = multiprocessing.Manager()
-        # 父进程创建Queue，并传给各个子进程：
         self.queue_todo1 = manager.Queue()
-        # 12需要做的任务队列
         self.queue_todo2 = manager.Queue()
         self.queue_todo3 = manager.Queue()
         self.queue_todo4 = manager.Queue()
@@ -94,7 +86,6 @@ class QueueManager(managers.BaseManager):
         except BaseException as e:
             print(e)
         self.this_address = (str(address_ip), self.port)
-        # if os.path.exists(self.config_path):
         with open(self.config_path, "w+") as f:
             f.write(address_ip)
 
@@ -111,39 +102,27 @@ class QueueManager(managers.BaseManager):
         elif self.model == "client":
             self.start_run_client()
 
-    # @staticmethod
     def return_queue_todo1(self):
-        # global 用于函数内部，修改全局变量的值
-        # global queue_todo1
         return self.queue_todo1
 
-    # @staticmethod
     def return_queue_todo2(self):
-        # global 用于函数内部，修改全局变量的值
-        # global queue_todo2
         return self.queue_todo2
 
-    # @staticmethod
     def return_queue_todo3(self):
-        # global 用于函数内部，修改全局变量的值
-        # global queue_todo3
         return self.queue_todo3
 
-    # @staticmethod
     def return_queue_todo4(self):
-        # global 用于函数内部，修改全局变量的值
-        # global queue_todo4
         return self.queue_todo4
 
     def start_run_server(self):
-        # 将两个Queue注册到网络上，callable参数关联Queue对象
-        # ！win10中callale不对lambda匿名函数做处理
+        # Register two Queues to the network, callable parameter associated Queue object
+        # callale does not handle lambda anonymous functions in win10
         self.register('get_queue_todo1', callable=self.return_queue_todo1)
         self.register('get_queue_todo2', callable=self.return_queue_todo2)
         self.register('get_queue_todo3', callable=self.return_queue_todo3)
         self.register('get_queue_todo4', callable=self.return_queue_todo4)
-        # 绑定端口5000，这5000怎么来的？两个文件中的端口一样就行！，设置验证码abc
-        # 通过QueueManager将Queue暴露出去
+        # Binding port 5000, how did this 5000 come about? Just the same port in both files!
+        # Expose the Queue through the QueueManager
         self.start()
 
     def start_run_client(self):
@@ -156,18 +135,16 @@ class QueueManager(managers.BaseManager):
 
 class linff_sim():
     def __init__(self, root_path, shs, shp,mode="server"):
-        self.root_path = root_path  # r"C:\Users\Zander\PycharmProjects\pythonProjec2t\raw_eg"
+        self.root_path = root_path
         self.root_path_q2sucess=os.path.join(self.root_path,"q2sucess")
         self.root_path_q3sucess=os.path.join(self.root_path,"q3sucess")
-        self.with_level_dir=False
-        self.grid1_qfail_keep=True # True 即 最后grid1即使质量不通过也保存 ,False则加入队列1继续计算
+
         if not os.path.exists(self.root_path_q2sucess):
             os.makedirs(self.root_path_q2sucess)
         if not os.path.exists(self.root_path_q3sucess):
             os.makedirs(self.root_path_q3sucess)
         self.job_1_fail = os.path.join(self.root_path, "fail1.txt")
         self.server_config = os.path.join(self.root_path, "server.txt")
-        # os.remove("/home/zzr/project/linff/linff-main/deploy/save_dir/num_0000_0099/server.txt")
         if not os.path.exists(self.server_config):
             self.run_flag_file = os.path.join(self.root_path,
                                               "server_is_run.flag.{}.{}".format(socket.gethostname(), time.time()))
@@ -178,19 +155,12 @@ class linff_sim():
         self.shp = shp
         self.shs = shs
         manager = multiprocessing.Manager()
-        # 父进程创建Queue，并传给各个子进程：
-        # q = manager.Queue()
-        # 12需要做的任务队列
-        # self.q12_job = multiprocessing.Queue()
-        # self.cpu_list_free = manager.list()
         self.cpu_list_in_use = manager.list()
-        # self.is_edit_job_lock = manager.Lock()
         self.is_get_cpu_lock = manager.Lock()
         self.lock_level_2 = manager.Value("i", 0)
         self.level_2_min = 3
         self.lock_level_3 = manager.Value("i", 0)
         self.level_3_min = 3
-        # self.lock_level_3.value=4
         if mode=="server":
             self.with_server = True
         else:
@@ -199,13 +169,9 @@ class linff_sim():
 
     def init_job_queue(self):
         try:
-            # try:
-            #     self.server_print_status()
-            # except BaseException as e:
-            #     print(e)
-            if not os.path.exists(self.server_config):# or self.with_server:
+            if not os.path.exists(self.server_config): 
                 self.with_server = True
-                manager = QueueManager("server", self.server_config)  # address=('127.0.0.1', 5000), authkey=b'abc')
+                manager = QueueManager("server", self.server_config)   
             else:
                 manager = QueueManager("client", self.server_config)
             self.job_todo1_queue = manager.get_queue_todo1()
@@ -259,7 +225,7 @@ class linff_sim():
             self.lock_level_3.value = self.lock_level_3.value - 1
 
     def check_level_no_lock(self, level):
-        """没有锁住返回真
+        """No lock return true
 
         Args:
             level (_type_): _description_
@@ -268,14 +234,14 @@ class linff_sim():
             _type_: _description_
         """
         if level == 2:
-            if self.lock_level_2.value == -1:  # 任务都完成
+            if self.lock_level_2.value == -1:  # All tasks completed
                 return True
             elif self.lock_level_2.value > self.level_2_min:
                 return True
             else:
                 return False
         elif level == 3:
-            if self.lock_level_3.value == -1:  # 任务都完成
+            if self.lock_level_3.value == -1:  # All tasks completed
                 return True
             elif self.lock_level_3.value > self.level_3_min:
                 return True
@@ -287,10 +253,6 @@ class linff_sim():
             joblist = []
             qz = int(self.job_todon_queue_list[i].qsize())
             for j in range(qz):
-            #     # if not self.job_todon_queue_list[i].empty():
-            #     #     job = self.job_todon_queue_list[i].get()
-            #     #     joblist.append(job)
-            #     #     self.job_todon_queue_list[i].put(job)
                 try:
                     job = self.job_todon_queue_list[i].get_nowait()
                     joblist.append(job)
@@ -310,21 +272,15 @@ class linff_sim():
         self.job_3_todo = os.path.join(self.root_path, "todo3.txt")
         self.job_4_todo = os.path.join(self.root_path, "todo4.txt")
         self.job_n_todo = [self.job_1_todo, self.job_2_todo, self.job_3_todo, self.job_4_todo]
-        # self.__file_if_not_exist_creat_12(self.job_1_todo)
-        # self.__file_if_not_exist_creat(self.job_2_todo)
-        # self.__file_if_not_exist_creat(self.job_3_todo)
-        # self.__file_if_not_exist_creat(self.job_4_todo)
         while self.is_run_now():
             try:
                 for i in range(3):
                     if os.path.exists(self.job_n_todo[i]):
                         with open(self.job_n_todo[i], "r+") as f:
-                            # f.readlines()
                             this_lines = f.read().splitlines()
                         for job in this_lines:
                             if job.startswith("hmi"):
                                 self.job_todon_queue_list[i].put(job)
-                        # os.remove(self.job_n_todo[i])
                         os.rename(self.job_n_todo[i], "{}.{}".format(self.job_n_todo[i], time.time()))
                 self.server_print_status()
             except BaseException as e:
@@ -332,12 +288,11 @@ class linff_sim():
                 self.init_job_queue()
             time.sleep(20 * 60 + 3)
 
-    # 总控制
+
     def main_control(self):
         print("start control")
         with open(self.run_flag_file, "a+") as f:
             f.write(str(time.localtime()))
-        # self.__file_if_not_exist_creat(self.run_flag_get_cpu)
 
         self.__file_if_not_exist_creat(self.job_1_fail)
 
@@ -345,51 +300,31 @@ class linff_sim():
         return True
 
     def run_pool(self):
-        print("star pool")
-        r1 = 20
-        r2 = 20
-        r3 = 0
+        print("start pool")
+        r1 = 6
+        r2 = 5
+        r3 = 10
         rf = 0
-        # work_num = 1 + r1 + r2 + r3 + rf  # self.singal_num_process + self.parallel_num_process
-        # print(work_num)
-        # 4 4 20
-        # q=multiprocessing.Process(target=self.run_job_n, args=(1, 1,))
-        # p = [0, 1]
-        # p[0] = multiprocessing.Process(target=self.run_job_n, args=(1, 1,))
-        # p[0].start()
-        # p[0].join()
-        # pool = multiprocessing.Pool(processes=work_num)
-        # print(self.singal_cpu_list)
+
         if self.with_server:
             q = multiprocessing.Process(target=self.server_distribute_job_queue, args=(1,))
-            # pool.apply_async(func=self.server_distribute_job_queue, args=(1,))
         else:
-            # pool.apply_async(func=self.client_keep_job_queue, args=(1,))
             q = multiprocessing.Process(target=self.client_keep_job_queue, args=(0,))
         job = []
         for r3_num in range(r3):
-            # pool.apply_async(func=self.run_job_n, args=(1, r1_num,))  # TAG (scpu_num,)逗号一定要有，否则不执行
             j = multiprocessing.Process(target=self.run_job_n, args=(3, r3_num,))
             job.append(j)
         for r1_num in range(r1):
-            # pool.apply_async(func=self.run_job_n, args=(1, r1_num,))  # TAG (scpu_num,)逗号一定要有，否则不执行
             j = multiprocessing.Process(target=self.run_job_n, args=(1, r1_num,))
             job.append(j)
         for r2_num in range(r2):
-            # pool.apply_async(func=self.run_job_n, args=(1, r1_num,))  # TAG (scpu_num,)逗号一定要有，否则不执行
             j = multiprocessing.Process(target=self.run_job_n, args=(2, r2_num,))
             job.append(j)
 
-        # for r2_num in range(r2):
-        #     pool.apply_async(func=self.run_job_n, args=(2, r2_num,))  # TAG (scpu_num,)逗号一定要有，否则不执行
-        # for r3_num in range(r3):
-        #     pool.apply_async(func=self.run_job_n, args=(3, r3_num,))  # TAG (scpu_num,)逗号一定要有，否则不执行
         for rf_num in range(rf):
-            # pool.apply_async(func=self.run_job_free_fix, args=(rf_num + 1, rf_num,))
             j = multiprocessing.Process(target=self.run_job_free_fix, args=(1, rf_num,))
             job.append(j)
-        # pool.close()
-        # pool.join()
+
         q.start()
         for jq in job:
             jq.start()
@@ -413,16 +348,16 @@ class linff_sim():
         j = level - 1
         job = None
         try:
-            # if idn > 6:
-            #     if level == 1:
-            #         t1 = 0
-            #         while (not self.check_level_no_lock(2))  or t1 > 50:
-            #             time.sleep(5)
-            #             t1 = t1 + 1
-            #         t1 = 0
-            #         while (not self.check_level_no_lock(3))  or t1 > 50:
-            #             time.sleep(5)
-            #             t1 = t1 + 1
+            if idn > 6:
+                if level == 1:
+                    t1 = 0
+                    while (not self.check_level_no_lock(2))  or t1 > 50:
+                        time.sleep(5)
+                        t1 = t1 + 1
+                    t1 = 0
+                    while (not self.check_level_no_lock(3))  or t1 > 50:
+                        time.sleep(5)
+                        t1 = t1 + 1
             if not self.job_todon_queue_list[j].empty():
                 job = self.job_todon_queue_list[j].get()
             else:
@@ -460,8 +395,7 @@ class linff_sim():
                         with open(q3flagsucess,"w+") as f:
                             f.write("{}".format(time.time()))
                 else:
-                    if not self.grid1_qfail_keep:
-                        self.append_job_to_file(1, job)
+                    self.append_job_to_file(1, job)
             else:
                 time.sleep(5)
 
@@ -499,31 +433,20 @@ class linff_sim():
                     self.append_job_to_file(1, job)
 
     def get_level(self,job):
-        if self.with_level_dir:
-            job_name_list = job.split(".")
-            num = int(job_name_list[2])
-            num_level_1 = num//1000
-            num_level_2 = (num//100) % 10
-            child_dir= "num_{}{}00_{}{}99".format(num_level_1, num_level_2, num_level_1, num_level_2)
-        else:
-            child_dir=""
-        # return ""
+        job_name_list = job.split(".")
+        num = int(job_name_list[2])
+        num_level_1 = num//1000
+        num_level_2 = (num//100) % 10
+        child_dir= "num_{}{}00_{}{}99".format(num_level_1, num_level_2, num_level_1, num_level_2)
+        
         return child_dir
 
     def run_job_base(self, job, cpu_num_list, level):
-        # print("run_job12_base")  level=123
         print("start run job: {}  use cpu: {}".format(job, cpu_num_list))
         self.get_level_lock(level)
         work_path = os.path.join(self.root_path,self.get_level(job), job)
         log_path = os.path.join(self.root_path,self.get_level(job), job, "run.log")
         ing_path = os.path.join(self.root_path,self.get_level(job), job, "ing.flag")
-        # if level==1:
-        #     done_path = os.path.join(self.root_path, job, "done1.txt")
-        # elif level==2:
-        #     done_path = os.path.join(self.root_path, job, "done2.txt")
-        # else:
-        #     done_path = os.path.join(self.root_path, job, "done.txt")
-        # q2flagsucess = os.path.join(self.root_path_q2sucess, "{}.sucess".format(job))
         q3flagsucess = os.path.join(self.root_path_q3sucess, "{}.sucess".format(job))
         if os.path.exists(ing_path) or os.path.exists(q3flagsucess) or not os.path.exists(work_path):  # or os.path.exists(done_path):
             to_free_cpu = list(set(self.cpu_list_in_use) - set(cpu_num_list))
@@ -536,7 +459,7 @@ class linff_sim():
 
         is_base_file = self.check_base_file_need(job)
         if not is_base_file:
-            print("缺少文件")
+            print("loss file")
             with open(self.job_1_fail, "a+") as f:
                 f.write("{}\n".format(job))
             return "ing"
@@ -557,7 +480,7 @@ class linff_sim():
 
         try:
             cmd = "/usr/bin/taskset -c {0} {1} {2}  {3} >> {4} ".format(cpus_use, run_sh, work_path, level, log_path)
-            returncode = os.system(cmd)  # TAG  subprocess.Popen会阻塞
+            returncode = os.system(cmd)  # TAG  subprocess.Popen Will block
 
             if returncode == 0:
                 # run_result = True
@@ -565,8 +488,7 @@ class linff_sim():
                 if os.path.exists(q_f):
                     run_result = quality_is_ok(q_f)
                 else:
-                    if not self.grid1_qfail_keep:
-                        self.run_job_qfail_remove(job)
+                    self.run_job_qfail_remove(job)
                     run_result = False
 
             else:
@@ -613,7 +535,6 @@ class linff_sim():
                       'Iteration_stop.mark', 'mask.dat',
                       'step1.log'] #
 
-            # os.path.
             for p in p_list:
                 p_path = os.path.join(r_path, p)
                 if os.path.exists(p_path):
@@ -630,9 +551,9 @@ class linff_sim():
                 lines = f.readlines()
             if len(lines) == 10:
                 xyz = int(lines[1]) * int(lines[3]) * int(lines[5])
-                use_num = int(xyz / 1024 / 1024 / 5 / 4) + 3
+                use_num = int(xyz / 1024 / 1024 / 5 / 4) + 1
                 if use_num != 1:
-                    use_num = use_num + 5
+                    use_num = use_num + 4
         return use_num
 
     def get_free_cpu_list(self, cpu_need_nums):
@@ -650,8 +571,6 @@ class linff_sim():
 
     def get_free_cpu_list_base(self):
         result_list = []
-        # with open(self.run_flag_get_cpu, "r+") as f:
-        #     fcntl.flock(f.fileno(), fcntl.LOCK_EX)  # 加锁
         self.is_get_cpu_lock.acquire()
         all_p = psutil.cpu_percent(interval=6, percpu=True)
         for i in range(len(all_p)):
@@ -692,20 +611,16 @@ class linff_sim():
 
 def get_config():
     if len(sys.argv) < 4:
-        print("请输入3个参数：")
+        print("Please enter 3 parameters.")
         result = None
     else:
-        data_root = sys.argv[1]  # him文件夹父级根目录
-        shs_path = sys.argv[2]  # sh单线程脚本路径
-        shp_path = sys.argv[3]  # sh多线程脚本路径
-        # single_percent = float(sys.argv[4])  # sh3脚本路径  single_percent = 0.3
-        # parallel_num = int(sys.argv[5])  # sh3脚本路径  parallel_num = 10
+        data_root = sys.argv[1]  # him folder parent root directory
+        shs_path = sys.argv[2]  # sh single-threaded script path
+        shp_path = sys.argv[3]  # sh multithreaded script path
         if os.path.exists(data_root) and os.path.exists(shs_path) and os.path.exists(shp_path):
             result = dict(data_root=data_root, shs_path=shs_path, shp_path=shp_path)
-            # , single_percent=single_percent,
-            #           parallel_num=parallel_num)
         else:
-            print("输入参数有误")
+            print("Error in input parameters")
             print(os.path.exists(data_root), os.path.exists(
                 shs_path), os.path.exists(shp_path))
             result = None
@@ -717,9 +632,6 @@ def test():
     config_dict["data_root"] = r"/home/ma-user/work/project/pre_b2/num_0300_0399/"
     config_dict["shs_path"] = r"/home/ma-user/work/project/linff-sim/app_c/compiled.single/multigrid.sh"
     config_dict["shp_path"] = r"/home/ma-user/work/project/linff-sim/app_c/compiled.parallel/multigrid.sh"
-    # config_dict["data_root"] = r"/home/zzr/project/linff/linff-main/deploy/save_dir/num_0000_0099"
-    # config_dict["sh12_path"] = r"/home/zzr/project/linff/linff-sim/app_c/compiled.single/multigrid.sh"
-    # config_dict["sh3_path"] = r"/home/zzr/project/linff/linff-sim/app_c/compiled.parallel/multigrid.sh"
 
     os.environ[
         "OMP_PROC_BIND"] = "true"  # https://support.huaweicloud.com/tngg-kunpenghpcs/kunpenghpcsolution_05_0025.html

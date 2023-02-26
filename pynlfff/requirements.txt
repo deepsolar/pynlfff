@@ -1,21 +1,31 @@
 # Requirements 
 # 推荐py37
-psutil
+
+# common
+numpy
+pandas
+h5py
+
+# astro
 drms
 sunpy
 astropy
 scipy
-numpy
-# sys
-# math
-argparse
-# datetime
-# json
-# urllib
+
+# for plot
 matplotlib
+
+# for computer
+psutil
+
+# for download fits
 requests
-matplotlib #mpl_toolkits
+bs4
+lxml
+zeep
 
 # for label
 peewee
 wget
+
+
