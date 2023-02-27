@@ -1,6 +1,6 @@
 
 
-from pynlfff.pyplot import plot3d
+from pynlfff.pyplot import plot3dcut
 
 
 if __name__=="__main__":
@@ -9,7 +9,7 @@ if __name__=="__main__":
         "figsize": (6, 6)
     }
     # d3_drawer = NlfffPlotD3CutCake(**di)
-    d3_drawer = plot3d.NlfffPlotD3CutCake(figsize=(6, 6))
+    d3_drawer = plot3dcut.NlfffPlotD3CutCake(figsize=(6, 6))
     data_hdf_path = r"C:\Users\Zander\PycharmProjects\pynlfff\test_data\product\product1\Bxyz.h5"
     picture_path = r"C:\Users\Zander\PycharmProjects\pynlfff\test_data\product\product1\NlfffPlotD3CutCake.png"
     load_result = d3_drawer.load_data_hdf(data_hdf_path)

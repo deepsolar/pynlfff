@@ -328,9 +328,6 @@ class nlfffPlotD3FieldLine():
         pass
 
 
-#         TODO
-
-
 if __name__ == "__main__":
     print("start test")
     di = {
