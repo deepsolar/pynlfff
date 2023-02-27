@@ -151,7 +151,7 @@ def genImg(data,percentage,value_name='bz',axis_name='z',withFn=False):
 
     return fn,img
 
-def main_draw_3d_body(dataBout,out_dir,axis_name=['bx','by','bz','bnorm2']):
+def main_draw_3d_body(dataBout,out_dir,axis_name=['bx','by','bz','bnorm2'],bar="auto"):
     # dataBout=pic4d.copy()
     # out_dir="/home/zander/Desktop/draw"
     dataBout=hmiPreprocess(dataBout)
@@ -162,7 +162,10 @@ def main_draw_3d_body(dataBout,out_dir,axis_name=['bx','by','bz','bnorm2']):
     screenSizeY=1600  
 
     for axis_idx in range(0,axis_num):
-        ren0=genVolumeRen(axis_idx)
+        if bar=="auto":
+            ren0=genVolumeRen(axis_idx)
+        else:
+            ren0=genVolumeRen(3)
         camera,axesActor,cubeAxesActor=genAuxComp()
         setRen(ren0,[0.0, 0.0, 1.0, 1.0],camera,cubeAxesActor)
 

@@ -8,7 +8,7 @@ long_description = (here / 'README.md').read_text(encoding='utf-8')
 
 setup(
     name='pynlfff',
-    version='0.3.3.3',
+    version='0.3.3.5',
     description='python for nlfff',
     long_description=long_description,
     long_description_content_type='text/markdown',

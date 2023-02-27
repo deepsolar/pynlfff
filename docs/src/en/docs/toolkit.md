@@ -20,6 +20,6 @@ The toolkit is divided into two parts, dataset construction and product usage.
     + The toolkit-based use we provide some slightly more advanced features, such as visualization, and more features will be added later.
 
 
-> notebook can be downloaded from [click here](https://github.com/deepsolar/pynlfff/blob/main/test/guide/Dataset_nlfff_and_pynlfff_base_use_en.ipynb), or [click here to open it in colab](https://drive.google.com/file/d/1Nx3xW4N8B2-W5FybV_fjP_ngoxJDp0HI/view?usp=sharing), and the html version can be viewed [here](https://github.com/deepsolar/pynlfff/blob/main/test/guide/Dataset_nlfff_and_pynlfff_base_use_en.html)
+> notebook can be downloaded from [click here](https://github.com/deepsolar/pynlfff/blob/main/test/guide/Dataset_nlfff_and_pynlfff_base_use_en.ipynb), or [click here to open it in colab](https://drive.google.com/file/d/1Nx3xW4N8B2-W5FybV_fjP_ngoxJDp0HI/view?usp=sharing), and the html version can be viewed [here](guide/Dataset_nlfff_and_pynlfff_base_use_en.html)
 
 
