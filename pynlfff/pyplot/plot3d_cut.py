@@ -13,7 +13,7 @@ Examples:  None Now
 Adapted:   ZhaoZhongRui (zhaozhongrui21@mails.ucas.ac.cn) Edit Python (2022.03)
 
 """
-import numpy
+
 import numpy as np
 import matplotlib.pyplot as plt
 import h5py
@@ -32,21 +32,6 @@ class NlfffPlotD3CutCake():
         :param args:
         :param kwargs:
         """
-        # set fig and you can use it outside like : d3_drawer.fig.XXX
-        self.fig = plt.figure(*args, **kwargs)
-
-        # set draw view and you can use it outside like : d3_drawer.ax.view_init(40, -30)
-        self.ax = self.fig.add_subplot(projection='3d')
-        ## Set distance and angle view
-        self.ax.view_init(-40, 30)
-        self.ax.dist = 11
-        self.data_hdf_dataset_name="Bxyz"
-        ## Set labels and zticks
-        self.ax.set(
-            xlabel='X',
-            ylabel='Y',
-            zlabel='Z',
-        )
 
         # set colormap
         self.color_map = None # eg plt.get_cmap('coolwarm')
@@ -84,7 +69,7 @@ class NlfffPlotD3CutCake():
         :return:load sucessfully return True, error type or shape return False
         """
         result = False
-        if isinstance(array_data, numpy.ndarray):
+        if isinstance(array_data, np.ndarray):
             if len(array_data.shape) == 4:
                 self.full_data_array = array_data
                 result = True
@@ -137,13 +122,52 @@ class NlfffPlotD3CutCake():
         this_cut_dict = dict(B=B, N=N, cut_percent=cut_percent, cut_num=cut_num)
         self.__cut_list.append(this_cut_dict)
 
-    def run_cut(self):
+    def run_cut(self,
+                # https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.figure.html
+                fig_dict=dict(figsize=[6, 6],dpi=300.0),
+
+                view_dict=None,
+
+                # https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.show.html
+                is_show=True,
+                show_dict=dict(block=True),
+
+                # https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.savefig.html
+                is_save=False,
+                save_dict=dict(fname="./cut.png", dpi='figure')
+                ):
         """
         when you haven load data and add_cut ,
         run cut for computer data and prepare for draw
         :return: None
         """
         # computer shape
+        # set fig and you can use it outside like : d3_drawer.fig.XXX
+        self.fig = plt.figure(**fig_dict)
+
+        # set draw view and you can use it outside like : d3_drawer.ax.view_init(40, -30)
+        self.ax = self.fig.add_subplot(projection='3d')
+        ## Set distance and angle view
+        if view_dict is None:
+            elev=45
+            azim=45
+            dist=11
+        else:
+            elev=view_dict["elev"]
+            azim=view_dict["azim"]
+            dist=view_dict["dist"]
+        self.ax.view_init(elev, azim)
+        self.ax.dist = dist
+        # self.ax.view_init(-40, 30)
+        # self.ax.dist = 11
+        self.data_hdf_dataset_name="Bxyz"
+        ## Set labels and zticks
+        self.ax.set(
+            xlabel='X',
+            ylabel='Y',
+            zlabel='Z',
+        )
+
         data_shape = self.full_data_array[0].shape
         self.__Nx = data_shape[1]
         self.__Ny = data_shape[0]
@@ -298,56 +322,8 @@ class NlfffPlotD3CutCake():
         # add color bar
         if len(cut_obj_list) > 0 and self.colorbar_show:
             self.fig.colorbar(cut_obj_list[0], ax=self.ax, fraction=0.02, pad=0.1)  # , label='Name [units]')
-
-    def show(self, *args, **kwargs):
-        """
-        show picture as plot.show
-        :param args:
-        :param kwargs:
-        :return:
-        """
-        plt.show(*args, **kwargs)
-        # time.sleep(100)
-
-    def savefig(self, *args, **kwargs):
-        """
-        save picture as plt savefig
-        :param args:
-        :param kwargs:
-        :return:
-        """
-        plt.savefig(*args, **kwargs)
-
-
-class nlfffPlotD3FieldLine():
-    """
-    Draw 3D Magnetic field lines
-    """
-
-    def __init__(self, *args, **kwargs):
-        pass
-
-
-if __name__ == "__main__":
-    print("start test")
-    di = {
-        "figsize": (6, 6)
-    }
-    # d3_drawer = NlfffPlotD3CutCake(**di)
-    d3_drawer = NlfffPlotD3CutCake(figsize=(6, 6))
-    data_hdf_path =r"/home/zander/Desktop/Bxyz.h5"
-    picture_path=r"/home/zander/Desktop/NlfffPlotD3CutCake.png"
-    load_result = d3_drawer.load_data_hdf(data_hdf_path)
-    if load_result:
-        # d3_drawer.colormap_mirror=True
-        # d3_drawer.colormap_alpha=0.5
-        # d3_drawer.add_cut("Bz", "Nx")
-        # d3_drawer.add_cut("Bz", "Ny")
-        d3_drawer.add_cut("Bz", "Nz")
-        d3_drawer.add_cut("Bz", "Nz", cut_num=0)
-        # d3_drawer.add_cut("Bz", "Nx",cut_percent=0.3)
-        d3_drawer.add_cut("Bz", "Nz", cut_percent=0.2)
-        d3_drawer.run_cut()
-        d3_drawer.savefig(picture_path)
-        d3_drawer.show()
-        d3_drawer.close_data_hdf()
+        if is_save:
+            plt.savefig(**save_dict)
+        if is_show:
+            plt.show(**show_dict)
+        

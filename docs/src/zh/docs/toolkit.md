@@ -20,6 +20,6 @@
     + 基于工具包的使用我们提供了一些稍微高阶功能，如可视化等，后续将追加更多功能。
 
 
-> notebook可以[点击这里下载](https://github.com/deepsolar/pynlfff/blob/main/test/guide/Dataset_nlfff_and_pynlfff_base_use_zh.ipynb)，也可以[点击这里在colab中打开](https://drive.google.com/file/d/1Nx3xW4N8B2-W5FybV_fjP_ngoxJDp0HI/view?usp=sharing)， html版本可以在[这里查看](https://github.com/deepsolar/pynlfff/blob/main/test/guide/Dataset_nlfff_and_pynlfff_base_use_zh.html)
+> notebook可以[点击这里下载](https://github.com/deepsolar/pynlfff/blob/main/test/guide/Dataset_nlfff_and_pynlfff_base_use_zh.ipynb)，也可以[点击这里在colab中打开](https://drive.google.com/file/d/1Nx3xW4N8B2-W5FybV_fjP_ngoxJDp0HI/view?usp=sharing)， html版本可以在[这里查看](guide/Dataset_nlfff_and_pynlfff_base_use_zh.html)
 
 
