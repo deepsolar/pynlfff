@@ -159,6 +159,26 @@ class NlfffFile():
             else:
                 result = self.__bin2array_with_nxyz_oneload_alldata_nomap(nxyz[0], nxyz[1], nxyz[2], bin_path)
         return result
+    
+    def read_bin2(self,head_fileName=None,bout_fileName=None,bout_dir=None):
+        if bout_dir is not None:
+            head_fileName=os.path.join(bout_dir,'grid3.ini')
+            bout_fileName=os.path.join(bout_dir,'Bout.bin')
+
+        with open(head_fileName,'rb') as f:
+            f.readline()
+            nx=int(f.readline())
+            f.readline()
+            ny=int(f.readline())
+            f.readline()
+            nz=int(f.readline())
+            f.close()
+
+        nc=3    
+        data=np.fromfile(file=bout_fileName,offset=0,count=3*nx*ny*nz,dtype=np.double).reshape(nc,nx,ny,nz)
+        print('[bout] shape: %s'%(str(data.shape)))
+
+        return data
 
     def tran_bin2hdf5(self, bin_path, hdf5_path, grid_path=None,nx=None,ny=None,nz=None, memmap=True, overwrite=True):
         """

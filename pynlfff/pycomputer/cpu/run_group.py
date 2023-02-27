@@ -1,5 +1,16 @@
 # coding=utf-8
-# 固定进程占用固定核心，任务队列在更新
+"""
+Purpose:   [1] run group in cpu
+
+Usage:     This code depends on the psutil
+           This code is compatible with python 3.7.x.
+
+Examples:  None Now
+
+Adapted:   ZhaoZhongRui (zhaozhongrui21@mails.ucas.ac.cn) Edit Python (2022.03)
+
+"""
+
 import os
 import sys
 import multiprocessing
@@ -10,12 +21,10 @@ from multiprocessing import managers
 import socket
 
 
-# import fcntl
-# from multiprocessing.managers import BaseManager
-# from multiprocessing import Manager
-
 def quality_is_ok(file_path):
-    """检测文件degree角度是否大于30，大于30或者文件为空则返回False，否则为True，要保证文件存在
+    """Check whether the file degree angle is greater than 30, 
+    greater than 30, or the file is empty, return False, 
+    otherwise True, to ensure that the file exists
 
     Args:
         file_path ([type]): [description]

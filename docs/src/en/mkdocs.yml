@@ -29,6 +29,7 @@ announce: Data release is in beta stage and may be unstable!
 # Repository
 repo_name: deepsolar/pynlfff
 repo_url: https://github.com/deepsolar/pynlfff
+edit_uri: edit/main/docs/src/en/docs/
 
 # Nav
 nav:

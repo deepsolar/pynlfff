@@ -23,7 +23,7 @@ class RCheck():
     check pynlfff some function needed module is install or not
     """
 
-    def __init__(self, version="0.3.2", print_try_log=True,try_install=True):
+    def __init__(self, version="0.3.x", print_try_log=True,try_install=True):
         """
         version default now, can use for different version test latter,
         print test log can show display or not
@@ -42,9 +42,9 @@ class RCheck():
         load data by version
         :return: None
         """
-        if self.version == "0.2.0":
+        if self.version.startswith("0.2"):
             self.__data_v02()
-        if self.version == "0.3.2":
+        if self.version.startswith("0.3"):
             self.__data_v03()
         else:
             print("no that version: {}".format(self.version))
@@ -105,16 +105,16 @@ class RCheck():
 
             ["wget", "", ""],  # 12
             ["peewee", "", ""],  # 13
-
+            ["vtk", "", ""],  # 14
             
-            ["", "", ""],  # 
+            # ["", "", ""],  # 
         ]
         d = self.__full_list
         self.__requirements_base = [d[2]]
         self.__requirements_prepare = [d[0], d[1], d[2], d[3], d[4]]
         self.__requirements_computer = []
         self.__requirements_product = [d[5], d[2]]
-        self.__requirements_plot = [d[5], d[6], d[2]]
+        self.__requirements_plot = [d[5], d[6], d[2], d[14]]
         self.__requirements_download = [d[1],d[3],d[4],d[8], d[9], d[10], d[11]]
         self.__requirements_label = [d[2],d[12],d[13]]
 

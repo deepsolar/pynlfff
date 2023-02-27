@@ -29,6 +29,7 @@ announce: 数据发布处于beta阶段,可能存在不稳定情况!
 # Repository
 repo_name: deepsolar/pynlfff
 repo_url: https://github.com/deepsolar/pynlfff
+edit_uri: edit/main/docs/src/zh/docs/
 
 # Nav
 nav:

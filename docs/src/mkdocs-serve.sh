@@ -1,15 +1,19 @@
 
+SHELL_FOLDER=$(cd "$(dirname "$0")";pwd)
+
+RUNDIR=$SHELL_FOLDER/../
+
 
 # install
-pip install mkdocs
+# pip install mkdocs
 
 # new
-mkdocs new pynlfff
+# mkdocs new pynlfff
 
-# serve
-mkdocs serve
+# # serve
+# mkdocs serve
 
 # edit
 # mkdocs.yml
 
-python -m http.server --directory /tmp/
+python -m http.server --directory $RUNDIR
