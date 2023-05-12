@@ -1,2 +1,5 @@
 markdown-katex
 jinja2==3.0.0
+mkdocs-material-extensions
+mkdocs-pymdownx-material-extras
+mkdocs-minify-plugin

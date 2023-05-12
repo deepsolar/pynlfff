@@ -1,11 +1,14 @@
 
 SHELL_FOLDER=$(cd "$(dirname "$0")";pwd)
+cd $SHELL_FOLDER
+pip install mkdocs
+pip install -r requirements.txt
+
 
 rm -rf $SHELL_FOLDER/../zh
 
 cd $SHELL_FOLDER/zh
 # build
-# apt install mkdocs
 mkdocs build
 mv site $SHELL_FOLDER/../zh
 # clean cache

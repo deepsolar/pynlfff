@@ -64,7 +64,7 @@ identifiers仓库地址 <https://registry.identifiers.org/registry/nlfff>
 > 在其中我们也提供基本使用指南。
 
 
-> 下载数据集演示的notebook可以[点击这里下载](https://github.com/deepsolar/pynlfff/blob/main/test/guide/Dataset_nlfff_and_pynlfff_base_use_zh.ipynb)，也可以[点击这里在colab中打开](https://colab.research.google.com/drive/1tbDwW0dr25txDv9L_SeepnRBbmHB2j9p?usp=sharing)， html版本可以在[这里查看](https://nlfff.dataset.deepsolar.space/zh/guide/Dataset_nlfff_and_pynlfff_base_use_zh.html)
+> 下载数据集演示的notebook可以[点击这里下载](https://github.com/deepsolar/pynlfff/blob/main/test/guide/Dataset_nlfff_and_pynlfff_base_use_zh.ipynb)，可以[点击这里在华为modelart打开](https://developer.huaweicloud.com/develop/aigallery/notebook/detail?id=f9e4f1ea-49a3-460b-abc9-41bbf82c0e0a)，也可以[点击这里在google colab中打开](https://colab.research.google.com/drive/1tbDwW0dr25txDv9L_SeepnRBbmHB2j9p?usp=sharing)， html版本可以在[这里查看](https://nlfff.dataset.deepsolar.space/zh/guide/Dataset_nlfff_and_pynlfff_base_use_zh.html)
 
 
 
