@@ -1,6 +1,28 @@
 
 # NLFFF
 
+## 简洁
+
+基于c语言，支持gcc/nvcc版本的势场和非线性无力场太阳活动区三维磁场外推程序。
+
+## 支持版本
+
+
+|              | 势场green                             | 势场fftpot4                       | 非线性无力场nlfff                |
+| ------------ | ------------------------------------- | --------------------------------- | -------------------------------- |
+| 支持硬件     |                                       |                                   |                                  |
+| cpu单进程    | support                               | support                           | support                          |
+| cpu多进程    | support                               | support                           | support                          |
+| gpu单卡      | support                               | not support                       | support                          |
+| 支持体系结构 |                                       |                                   |                                  |
+| arm          | support                               | support                           | support                          |
+| amd          | support                               | support                           | support                          |
+|              |                                       |                                   |                                  |
+| 说明         | 小磁图ny<1000，gpu单卡和cpu多进程均快 | 大磁图ny>1000，多进程相对单卡较快 | 小磁图ny<1000约占小于10g左右显存 |
+
+
+
+
 ## 使用步骤
 ### 编译
 #### [可选]设置编译选项
