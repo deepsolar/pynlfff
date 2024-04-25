@@ -14,6 +14,8 @@ arm架构：
 
 编辑 init_compile_ps_arm.sh ， 选择编译哪些东西
 
+> 要求有gcc环境，如果并行要求有openmp环境，如果使用显卡要求有nvcc环境
+
 
 #### 编译
 
