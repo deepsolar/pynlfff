@@ -8,17 +8,21 @@
 ## 支持版本
 
 
-|              | 势场green                             | 势场fftpot4                       | 非线性无力场nlfff                |
-| ------------ | ------------------------------------- | --------------------------------- | -------------------------------- |
-| 支持硬件     |                                       |                                   |                                  |
-| cpu单进程    | support                               | support                           | support                          |
-| cpu多进程    | support                               | support                           | support                          |
-| gpu单卡      | support                               | not support                       | support                          |
-| 支持体系结构 |                                       |                                   |                                  |
-| arm          | support                               | support                           | support                          |
-| amd          | support                               | support                           | support                          |
-|              |                                       |                                   |                                  |
-| 说明         | 小磁图ny<1000，gpu单卡和cpu多进程均快 | 大磁图ny>1000，多进程相对单卡较快 | 小磁图ny<1000约占小于10g左右显存 |
+|              | 势场green                             | 势场fftpot4                                    | 非线性无力场nlfff                       |
+| ------------ | ------------------------------------- | ---------------------------------------------- | --------------------------------------- |
+|              |                                       |                                                |                                         |
+| 支持硬件     |                                       |                                                |                                         |
+| cpu单进程    | support                               | support                                        | support                                 |
+| cpu多进程    | support                               | support                                        | support                                 |
+| gpu单卡      | support                               | not support                                    | support                                 |
+|              |                                       |                                                |                                         |
+| 支持体系结构 |                                       |                                                |                                         |
+| arm          | support                               | support                                        | support                                 |
+| amd          | support                               | support                                        | support                                 |
+|              |                                       |                                                |                                         |
+| 备注         |                                       |                                                |                                         |
+| 使用阶段     | grid1准备势场作为初始数据阶段         | grid2、grid3，外推势场对比非线性无力场能量阶段 | grid1，grid2，grid3外推非线性无力场阶段 |
+| 说明         | 小磁图ny<1000，gpu单卡和cpu多进程均快 | 大磁图ny>1000，多进程相对单卡较快              | 小磁图ny<1000约占小于10g左右显存        |
 
 
 
