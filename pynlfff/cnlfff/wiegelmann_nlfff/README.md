@@ -5,7 +5,7 @@
 ### 编译
 #### [可选]设置编译选项
 
-> 要求有gcc环境，如果并行要求有openmp环境，如果使用显卡要求有nvcc环境
+> 要求有gcc、make环境，如果cpu并行要求有openmp环境，如果使用显卡要求有nvcc环境，即可以直接运行gcc，make、nvcc等
 
 
 amd架构：
@@ -44,7 +44,7 @@ bash ./init_compile_ps_arm.sh
 
 
 # 项目文件夹
-PROJECTDIR=./
+PROJECTDIR=./project_dir
 
 # 运行等级，可选 1 12 123 23 2 3
 GRID=123
