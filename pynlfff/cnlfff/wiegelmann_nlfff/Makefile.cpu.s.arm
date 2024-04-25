@@ -1,23 +1,11 @@
 
-# parallel
-LDFLAGS = -lm -fopenmp
-CFLAGS = -g -O5 -fopenmp
-CC=gcc
-RUNDIR = compiled.cpu.parallel
-MAKEFILE=Makefile.cpu.p
+# Non-parallel
+LDFLAGS = -lm
+CFLAGS = -g -O5
+CC = gcc
+RUNDIR = compiled.cpu.nonparallel.arm
+MAKEFILE=Makefile.cpu.s.arm
 # -----------------------------
-
-# # x86 parallel
-# LDFLAGS = -lm -m64 -fopenmp
-# CFLAGS = -m64 -g -O5 -fopenmp
-# CC = cc
-# RUNDIR = compiled.cpu.parallel
-
-# # for GCC
-# LDFLAGS = -lm -m64
-# CFLAGS = -m64 -O3 -mtune=native -ffast-math -ftree-vectorize
-# CC = gcc
-# RUNDIR = compiled.cpu.nonparallel
 
 ################################
 
@@ -75,6 +63,6 @@ install: relax4 $(TOOLS)
 	test -d $(RUNDIR) || mkdir $(RUNDIR)
 	cp relax4 $(RUNDIR)
 	cp $(TOOLS) $(RUNDIR)
-	cp multigrid.sh $(RUNDIR)
+	cp multigrid.cpu.sh $(RUNDIR)/multigrid.sh
 	chmod +x $(RUNDIR)/*
 

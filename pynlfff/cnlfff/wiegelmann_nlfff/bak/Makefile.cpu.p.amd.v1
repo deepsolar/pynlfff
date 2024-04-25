@@ -1,10 +1,10 @@
 
-# Non-parallel
-LDFLAGS = -lm
-CFLAGS = -g -O5
-CC = gcc
-RUNDIR = compiled.cpu.nonparallel
-MAKEFILE=Makefile.cpu.s
+# parallel
+LDFLAGS = -lm -fopenmp
+CFLAGS = -g -O5 -fopenmp
+CC=gcc
+RUNDIR = compiled.cpu.parallel.amd
+MAKEFILE=Makefile.cpu.p.amd
 # -----------------------------
 
 # # x86 parallel
@@ -75,6 +75,7 @@ install: relax4 $(TOOLS)
 	test -d $(RUNDIR) || mkdir $(RUNDIR)
 	cp relax4 $(RUNDIR)
 	cp $(TOOLS) $(RUNDIR)
-	cp multigrid.sh $(RUNDIR)
+	cp multigrid.cpu.sh $(RUNDIR)/multigrid.sh
+	cp multiprepro.cpu.p.amd.sh $(RUNDIR)/multiprepro.sh
 	chmod +x $(RUNDIR)/*
 

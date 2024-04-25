@@ -1,0 +1,14 @@
+
+# 指定输出文件路径
+# output_file="/path/to/output.log"
+
+# 循环运行 top 命令，每隔10分钟执行一次
+while true; do
+    # top -n 1 >> "$output_file"
+    # echo "--------------------------------------" >> "$output_file"
+    top -n 1
+    echo "--------------------------------------"
+    sleep 6  
+    date
+    # sleep 600  # 休眠10分钟
+done

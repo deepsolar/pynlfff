@@ -1,12 +1,31 @@
 
-# gpu cuda parallel
+# gpu cuda parallel  开发环境
+# LDFLAGS = -lm
+# CFLAGS = -g -O0 #-Wunused-parameter
+# NVCCFLAGS = -lib -g -O0 --fmad=false
+# CC = nvcc
+# NVCC = nvcc
+
+
+#  运行环境  a100 
+# LDFLAGS = -lm
+# CFLAGS = -O3 #-Wunused-parameter
+# NVCCFLAGS = -lib -O3 -arch=sm_80 # 假设GPU架构为sm_80，根据实际情况修改
+# CC = nvcc
+# NVCC = nvcc
+
+#  运行环境  通用
 LDFLAGS = -lm
-CFLAGS = -g -O0 #-Wunused-parameter
-NVCCFLAGS = -lib -g -O0 --fmad=false
+CFLAGS = -O3 #-Wunused-parameter
+NVCCFLAGS = -lib -O3 # -arch=sm_80 # 假设GPU架构为sm_80，根据实际情况修改
 CC = nvcc
 NVCC = nvcc
-RUNDIR = compiled.gpu.nvcc
-MAKEFILE=Makefile.gpu.nvcc
+
+
+# ============
+
+RUNDIR = compiled.gpu.nvcc.amd
+MAKEFILE=Makefile.gpu.nvcc.amd
 ################################
 
 LD = $(CC)
@@ -61,6 +80,7 @@ install: relax4 $(TOOLS)
 	test -d $(RUNDIR) || mkdir $(RUNDIR)
 	cp relax4 $(RUNDIR)
 	cp $(TOOLS) $(RUNDIR)
-	cp multigrid.sh $(RUNDIR)
+	cp multigrid.nvcc.amd.sh $(RUNDIR)/multigrid.sh
+	cp multigrid.nvcc.amd.sim.sh $(RUNDIR)/multigrid.sim.sh
 	chmod +x $(RUNDIR)/*
 

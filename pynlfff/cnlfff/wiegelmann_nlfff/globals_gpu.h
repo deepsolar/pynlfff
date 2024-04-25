@@ -10,6 +10,11 @@
 extern FILE *streamw, *initfile;
 // extern double Cmn[102][102], lmn[102][102], rmn[102][102];
 // extern double Lx, Ly, Lz, alpha, pi, q1;
+//势场
+extern int maxm, maxn;
+extern double alpha, q1,pi,Lx, Ly;
+extern double Cmn[maxm][maxn], lmn[maxm][maxn], rmn[maxm][maxn];
+//extern double *Bx, *By, *Bz;
 // extern double L1, L2, L3;
 // extern double *t, *xt, *yt, *zt, *absB, *t2, *xyzB, *refB;
 // extern double *x, *y, *z;

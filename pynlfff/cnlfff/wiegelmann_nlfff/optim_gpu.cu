@@ -2,9 +2,9 @@
  * @Description: https://doi.org/10.1007/s11207-012-9966-z
  * @Author: Thomas Wiegelmann (wiegelmann@mps.mpg.de)
  * @Date: 
- * @LastEditors: Xinze Zhang (zhangxinze17@mails.ucas.ac.cn)
+ * @LastEditors: Xinze Zhang (zhangxinze17@mails.ucas.ac.cn), Zhongrui Zhao (zhaozhongrui21@mails.ucas.ac.cn)
  * @LastEditDescription: Update GPU version
- * @LastEditTime: 202212
+ * @LastEditTime: 202404
 */
 
 #include <stdio.h>
@@ -19,15 +19,27 @@
 #define GRADY(f, i) ((iy > 0 && iy < ny - 1) ? (MCENTERGRAD(f, nz)) : ((iy == 0) ? (MLEFTGRAD(f, nz)) : ((iy == ny - 1) ? (MRIGHTGRAD(f, nz)) : (0.0))))
 #define GRADZ(f, i) ((iz > 0 && iz < nz - 1) ? (MCENTERGRAD(f, 1)) : ((iz == 0) ? (MLEFTGRAD(f, 1)) : ((iz == nz - 1) ? (MRIGHTGRAD(f, 1)) : (0.0))))
 
+// ============================
+// raw
+// #define MCENTERGRAD2(f, id) ((f[i + id] - f[i - id]) / (2 * h))
+// #define MLEFTGRAD2(f, id) ((-3 * f[i] + 4 * f[i + id] - f[i + 2 * id]) / (2 * h))
+// #define MRIGHTGRAD2(f, id) ((+3 * f[i] - 4 * f[i - id] + f[i - 2 * id]) / (2 * h))
+
+// /* GRAD for Boundaries , all 3 differences needed */
+// #define GRADX2(f, i) ((ix > 0 && ix < nx - 1) ? (MCENTERGRAD2(f, nynz)) : ((ix == 0) ? (MLEFTGRAD2(f, nynz)) : ((ix == nx - 1) ? (MRIGHTGRAD2(f, nynz)) : (0.0))))
+// #define GRADY2(f, i) ((iy > 0 && iy < ny - 1) ? (MCENTERGRAD2(f, nz)) : ((iy == 0) ? (MLEFTGRAD2(f, nz)) : ((iy == ny - 1) ? (MRIGHTGRAD2(f, nz)) : (0.0))))
+// #define GRADZ2(f, i) ((iz > 0 && iz < nz - 1) ? (MCENTERGRAD2(f, 1)) : ((iz == 0) ? (MLEFTGRAD2(f, 1)) : ((iz == nz - 1) ? (MRIGHTGRAD2(f, 1)) : (0.0))))
+// ============================
+
 #define GRADX_INNER(f, i) (MCENTERGRAD(f, nynz))
 #define GRADY_INNER(f, i) (MCENTERGRAD(f, nz))
 #define GRADZ_INNER(f, i) (MCENTERGRAD(f, 1))
 
-extern double time1_calculate, time2_calculate, timeTot_calculate;
-extern double time1_calculate1, time2_calculate1, timeTot_calculate1;
-extern double time1_calculate2, time2_calculate2, timeTot_calculate2;
-extern double time1_calculate3, time2_calculate3, timeTot_calculate3;
-extern double time1_calculate4, time2_calculate4, timeTot_calculate4;
+// extern double time1_calculate, time2_calculate, timeTot_calculate;
+// extern double time1_calculate1, time2_calculate1, timeTot_calculate1;
+// extern double time1_calculate2, time2_calculate2, timeTot_calculate2;
+// extern double time1_calculate3, time2_calculate3, timeTot_calculate3;
+// extern double time1_calculate4, time2_calculate4, timeTot_calculate4;
 
 __global__ void green_d(const int nx, const int ny, const int nz, const int cube_x, const int cube_y, const int cube_z, const double *x, const double *y, const double *z, const double *bz0, double *Pot0)
 {
@@ -64,8 +76,58 @@ __global__ void green_d(const int nx, const int ny, const int nz, const int cube
             }
 }
 
-void green_(double *Bx, double *By, double *Bz)
+__global__ void calculatePotential(double *x, double *y, double *z, double *bz0, double *Pot0, int nx, int ny, int nz, double zoff, int nynz)
 {
+    int idx = blockIdx.x * blockDim.x + threadIdx.x;
+    if (idx < nx * ny * nz)
+    {
+        int iz = idx % nz;
+        int iy = (idx / nz) % ny;
+        int ix = idx / (nz * ny);
+
+        double dummy1 = 0.0;
+        for (int ix1 = 0; ix1 < nx; ix1++)
+        {
+            for (int iy1 = 0; iy1 < ny; iy1++)
+            {
+                int i2 = ny * ix1 + iy1;
+                double rx = x[ix] - x[ix1];
+                double ry = y[iy] - y[iy1];
+                double rz = z[iz];
+                double r = sqrt(rx * rx + ry * ry + rz * rz);
+                dummy1 -= bz0[i2] / r;
+            }
+        }
+        Pot0[idx] = dummy1 / (2.0 * 3.14159);
+    }
+}
+
+
+
+// CUDA核函数，用于并行计算梯度
+__global__ void computeGradients(double *f, double *Bx, double *By, double *Bz, int nx, int ny, int nz, int nynz, double doubled_h) {
+    int i = threadIdx.x + blockIdx.x * blockDim.x;
+    if (i < nx * ny * nz) {
+        int ix = i / nynz;
+        int iy = (i % nynz) / nz;
+        int iz = i % nz;
+        // i = ix * nynz + iy * nz + iz;
+        // 计算梯度
+        // Bx[i] = GRADX2(f, i);
+        // By[i] = GRADY2(f, i);
+        // Bz[i] = GRADZ2(f, i);
+        Bx[i] = GRADX(f, i);
+        By[i] = GRADY(f, i);
+        Bz[i] = GRADZ(f, i);
+    }
+}
+
+
+
+
+void green_v2(double *Bx, double *By, double *Bz)
+{
+    // zxz  规整化但是有些慢
     FILE *streamw, *initfile;
     double zoff, dummy1, doubled_h;
     int nx, ny, nz, nynz, nxnynz;
@@ -183,8 +245,9 @@ void green_(double *Bx, double *By, double *Bz)
     printf("\n\n B written to B0.bin \n");
 }
 
-void green(double *Bx, double *By, double *Bz)
+void green_v1(double *Bx, double *By, double *Bz)
 {
+    // weg  cpu并行
     FILE *streamw, *initfile;
     double zoff, dummy1, doubled_h, r, rx, ry, rz;
     int nx, ny, nz, nynz, nxnynz;
@@ -328,10 +391,12 @@ double sum1D(int nx, double *x_d)
     double sum;
 
     sum1D_d<<<gridSize, blockSize>>>(nx, slice_nx, x_d);
+    
     cudaError_t err = cudaGetLastError();
     if (err != cudaSuccess)
     {
         printf("[sum1D_d]: CUDA Error: %s\n", cudaGetErrorString(err));
+        // [sum1D_d]: CUDA Error: an illegal memory access was encountered
     }
 
     cudaMemcpy((void *)&sum, (void *)x_d, 1 * sizeof(double), cudaMemcpyDeviceToHost);
@@ -590,17 +655,29 @@ void calculate(const int maxit, const int diagstep, const int calcb, const int b
                const double *Bxorig, const double *Byorig, const double *Bzorig, const double *mask,
                int &it, double &mue, FILE *streamw, double *Bx, double *By, double *Bz)
 {
-    int cube_x, cube_y, cube_z, ncube_x, ncube_y, ncube_z;
-    cube_x = (nx + 32 - 1) / 32;
-    cube_y = (ny + 32 - 1) / 32;
-    cube_z = (nz + 32 - 1) / 32;
-    cube_x = cube_x < 4 ? 4 : cube_x;
-    cube_y = cube_y < 4 ? 4 : cube_y;
-    cube_z = cube_z < 4 ? 4 : cube_z;
-    ncube_x = (nx + cube_x - 1) / cube_x;
-    ncube_y = (ny + cube_y - 1) / cube_y;
-    ncube_z = (nz + cube_z - 1) / cube_z;
+    // int cube_x, cube_y, cube_z, ncube_x, ncube_y, ncube_z;
 
+    cudaDeviceProp prop;
+    cudaGetDeviceProperties(&prop, 0); // 获取当前设备的属性，假设使用设备0
+
+    int max_threads_per_block = prop.maxThreadsPerBlock;
+    // TODO  默认全部占用
+    int cube_s = pow(max_threads_per_block, 1.0/3.0);  // 计算cube_s
+    int cube_x = (nx + cube_s - 1) / cube_s;
+    int cube_y = (ny + cube_s - 1) / cube_s;
+    int cube_z = (nz + cube_s - 1) / cube_s;
+
+    // 设置cube的最小值，保证至少有4个cube
+    int cube_xyz_min_this = 4;
+    cube_x = cube_x < cube_xyz_min_this ? cube_xyz_min_this : cube_x;
+    cube_y = cube_y < cube_xyz_min_this ? cube_xyz_min_this : cube_y;
+    cube_z = cube_z < cube_xyz_min_this ? cube_xyz_min_this : cube_z;
+
+    int ncube_x = (nx + cube_x - 1) / cube_x;
+    int ncube_y = (ny + cube_y - 1) / cube_y;
+    int ncube_z = (nz + cube_z - 1) / cube_z;
+
+    
     int shape[9] = {nx, ny, nz, cube_x, cube_y, cube_z, ncube_x, ncube_y, ncube_z};
     int nxny = nx * ny, nxnynz = nx * ny * nz, statcount = 0, restore = 0;
     int ncube_xyz = ncube_x * ncube_y * ncube_z;
@@ -655,47 +732,52 @@ void calculate(const int maxit, const int diagstep, const int calcb, const int b
     cudaMemcpy((void *)By1_d, (void *)By_d, nxnynz * sizeof(double), cudaMemcpyDeviceToDevice);
     cudaMemcpy((void *)Bz1_d, (void *)Bz_d, nxnynz * sizeof(double), cudaMemcpyDeviceToDevice);
 
-    time1_calculate = clock();
-    cudaError_t err = cudaGetLastError();
+    // time1_calculate = clock();
+    // cudaError_t err = cudaGetLastError();
     while (it < maxit && statcount < 10 && mue > 1.0e-7 * dx * dx)
     {
         it = it + 1;
 
-        time1_calculate1 = clock();
+        // time1_calculate1 = clock();  
+
         calculateL_d<<<gridSize, blockSize>>>(shape_d, doubled_h, Bx_d, By_d, Bz_d, DivB_d, odotb_d, oxbx_d, oxby_d, oxbz_d, oxjx_d, oxjy_d, oxjz_d, oxa_d, oya_d, oza_d, oxb_d, oyb_d, ozb_d, help_d);
+        cudaError_t err = cudaGetLastError();
         if (err != cudaSuccess)
         {
             printf("[calculateL_1_d]: CUDA Error: %s\n", cudaGetErrorString(err));
+            // [calculateL_1_d]: CUDA Error: an illegal memory access was encountered
+            // return;
         }
         cudaDeviceSynchronize();
-        time2_calculate1 = clock();
-        timeTot_calculate1 += ((time2_calculate1 - time1_calculate1) / CLOCKS_PER_SEC);
+        // time2_calculate1 = clock();
+        // timeTot_calculate1 += ((time2_calculate1 - time1_calculate1) / CLOCKS_PER_SEC);
 
-        time1_calculate2 = clock();
+        // time1_calculate2 = clock();
         L = sum1D(ncube_xyz, help_d);
         L1 = sum1D(ncube_xyz, help_d + ncube_xyz);
         L2 = sum1D(ncube_xyz, help_d + ncube_xyz * 2);
         L = L * dx * dy * dz;
         L1 = L1 * dx * dy * dz;
         L2 = L2 * dx * dy * dz;
-        time2_calculate2 = clock();
-        timeTot_calculate2 += ((time2_calculate2 - time1_calculate2) / CLOCKS_PER_SEC);
+        // time2_calculate2 = clock();
+        // timeTot_calculate2 += ((time2_calculate2 - time1_calculate2) / CLOCKS_PER_SEC);
 
         if (calcb == 40)
         {
-            time1_calculate3 = clock();
+            // time1_calculate3 = clock();
 
             L3 = calculateL3(nx, ny, nz, nave, help_d, mask_d, Bx_d, By_d, Bz_d, Bxorig_d, Byorig_d, Bzorig_d);
             err = cudaGetLastError();
             if (err != cudaSuccess)
             {
                 printf("[calculateL3]: CUDA Error: %s\n", cudaGetErrorString(err));
+                // [calculateL3]: CUDA Error: an illegal memory access was encountered
             }
             cudaDeviceSynchronize();
             L = L + L3;
 
-            time2_calculate3 = clock();
-            timeTot_calculate3 += ((time2_calculate3 - time1_calculate3) / CLOCKS_PER_SEC);
+            // time2_calculate3 = clock();
+            // timeTot_calculate3 += ((time2_calculate3 - time1_calculate3) / CLOCKS_PER_SEC);
         }
 
         if (it == 0)
@@ -728,14 +810,14 @@ void calculate(const int maxit, const int diagstep, const int calcb, const int b
             mues[0] = mue;
             mues[1] = mue2;
            
-            time1_calculate4 = clock();
+            // time1_calculate4 = clock();
             
             cudaMemcpy((void *)mues_d, (void *)mues, 2 * sizeof(double), cudaMemcpyHostToDevice);
             update_d<<<gridSize, blockSize>>>(shape_d, calcb, boundary, doubled_h, oldL, L, Lx, nue, Bxorig_d, Byorig_d, Bzorig_d, mask_d, DivB_d, odotb_d, oxbx_d, oxby_d, oxbz_d, oxjx_d, oxjy_d, oxjz_d, oxa_d, oya_d, oza_d, oxb_d, oyb_d, ozb_d, mues_d, Bx_d, By_d, Bz_d, Bx1_d, By1_d, Bz1_d);
             cudaMemcpy((void *)mues, (void *)mues_d, 2 * sizeof(double), cudaMemcpyDeviceToHost);
             
-            time2_calculate4 = clock();
-            timeTot_calculate4 += ((time2_calculate4 - time1_calculate4) / CLOCKS_PER_SEC);
+            // time2_calculate4 = clock();
+            // timeTot_calculate4 += ((time2_calculate4 - time1_calculate4) / CLOCKS_PER_SEC);
            
             Bx_swap_d = Bx_d;
             By_swap_d = By_d;
@@ -806,8 +888,168 @@ void calculate(const int maxit, const int diagstep, const int calcb, const int b
 
     cudaDeviceSynchronize();
 
-    time2_calculate = clock();
-    timeTot_calculate = (time2_calculate - time1_calculate) / CLOCKS_PER_SEC;
+    // time2_calculate = clock();
+    // timeTot_calculate = (time2_calculate - time1_calculate) / CLOCKS_PER_SEC;
     // free();
     // cudaFree();
 }
+
+
+void green(double *Bx, double *By, double *Bz) {
+
+
+    FILE *streamw, *initfile;
+    char leer[25];
+    double *x, *y, *z, /* *Bx, *By, *Bz, *Pot0, */ *bz0;
+    double zoff, dummy1, /* h */ doubled_h /* , r, rx, ry, rz */;
+    int nx, ny, nz, nynz, nxnynz;
+    int i2, /* i, i3,*/ ix, iy, iz /* , ix1, iy1 */;
+    // double  doubled_h;
+    doubled_h = 1.0 * 2;
+    // h = 1.0;
+
+    if ((initfile = fopen("grid.ini", "r")) == NULL)
+    {
+        printf("\n Error grid.ini");
+        exit(1);
+    }
+    fscanf(initfile, "%s %i", &leer, &nx);
+    fscanf(initfile, "%s %i", &leer, &ny);
+    fscanf(initfile, "%s %i", &leer, &nz);
+    fscanf(initfile, "%s %lf", &leer, &zoff);
+    fclose(initfile);
+    printf("\n nx= %i, ny=%i , nz= %i \n", nx, ny, nz);
+
+    nynz = ny * nz;
+    nxnynz = nx * ny * nz;
+    zoff = 0.5;
+    x = (double *)calloc(nx, sizeof(double));
+    y = (double *)calloc(ny, sizeof(double));
+    z = (double *)calloc(nz, sizeof(double));
+    // Pot0 = (double *)calloc(nxnynz, sizeof(double));
+    bz0 = (double *)calloc(nx * ny, sizeof(double));
+
+    if ((streamw = fopen("allboundaries.dat", "r")) == NULL)
+    {
+        printf("\n Error ");
+        exit(1);
+    }
+    for (iy = 0; iy < ny; iy++)
+        for (ix = 0; ix < nx; ix++)
+        {
+            i2 = ny * ix + iy;
+            fscanf(streamw, "%lf", &dummy1);
+            fscanf(streamw, "%lf", &dummy1);
+            fscanf(streamw, "%lf", &dummy1);
+            bz0[i2] = dummy1;
+        }
+    fclose(streamw);
+    printf("\n Vectormagnetogram loaded");
+    printf("\n Only Bz is used for potential field \n");
+
+    for (ix = 0; ix < nx; ix++)
+    {
+        x[ix] = ix * 1.0;
+    }
+    for (iy = 0; iy < ny; iy++)
+    {
+        y[iy] = iy * 1.0;
+    }
+    for (iz = 0; iz < nz; iz++)
+    {
+        z[iz] = zoff + iz * 1.0;
+    }
+
+
+    double *d_x, *d_y, *d_z, *d_bz0, *d_Pot0;
+    cudaMalloc((void **)&d_x, nx * sizeof(double));
+    cudaMalloc((void **)&d_y, ny * sizeof(double));
+    cudaMalloc((void **)&d_z, nz * sizeof(double));
+    cudaMalloc((void **)&d_bz0, nx * ny * sizeof(double));
+    cudaMalloc((void **)&d_Pot0, nxnynz * sizeof(double));
+
+    cudaMemcpy(d_x, x, nx * sizeof(double), cudaMemcpyHostToDevice);
+    cudaMemcpy(d_y, y, ny * sizeof(double), cudaMemcpyHostToDevice);
+    cudaMemcpy(d_z, z, nz * sizeof(double), cudaMemcpyHostToDevice);
+    cudaMemcpy(d_bz0, bz0, nx * ny * sizeof(double), cudaMemcpyHostToDevice);
+
+
+    int devId = 0; // GPU 设备号，假设使用设备号为 0 的 GPU
+    cudaDeviceProp props;
+    cudaGetDeviceProperties(&props, devId); // 获取设备属性信息
+
+    // 获取设备的最大线程块大小
+    int maxThreadsPerBlock = props.maxThreadsPerBlock;
+
+    dim3 threadsPerBlock(maxThreadsPerBlock, 1, 1);
+    dim3 blocksPerGrid((nxnynz + threadsPerBlock.x - 1) / threadsPerBlock.x, 1, 1);
+
+    // dim3 threadsPerBlock(THREADS_PER_BLOCK, 1, 1);
+    // int blocksPerGrid = (nxnynz + THREADS_PER_BLOCK - 1) / THREADS_PER_BLOCK;
+
+    calculatePotential<<<blocksPerGrid, threadsPerBlock>>>(d_x, d_y, d_z, d_bz0, d_Pot0, nx, ny, nz, zoff, nynz);
+    cudaError_t err = cudaGetLastError();
+    if (err != cudaSuccess)
+    {
+        printf("[green.calculatePotential]: CUDA Error: %s\n", cudaGetErrorString(err));
+        // return;
+    }
+
+    // cudaMemcpy(Pot0, d_Pot0, nxnynz * sizeof(double), cudaMemcpyDeviceToHost);
+
+    cudaFree(d_x);
+    cudaFree(d_y);
+    cudaFree(d_z);
+    cudaFree(d_bz0);
+    // cudaFree(d_Pot0);
+    free(x);
+    free(y);
+    free(z);
+    // free(Pot0);
+    free(bz0);
+    
+
+    double *d_Bx, *d_By, *d_Bz;
+    cudaMalloc((void **)&d_Bx, nxnynz * sizeof(double));
+    cudaMalloc((void **)&d_By, nxnynz * sizeof(double));
+    cudaMalloc((void **)&d_Bz, nxnynz * sizeof(double));
+
+    // cudaMemcpy(d_Pot0, Pot0, nxnynz * sizeof(double), cudaMemcpyHostToDevice);
+
+    // blocksPerGrid = (nxnynz + THREADS_PER_BLOCK - 1) / THREADS_PER_BLOCK;
+
+    // int maxThreadsPerBlock = props.maxThreadsPerBlock;
+
+    // dim3 threadsPerBlock(maxThreadsPerBlock, 1, 1);
+    // dim3 blocksPerGrid((nxnynz + threadsPerBlock.x - 1) / threadsPerBlock.x, 1, 1);
+
+    computeGradients<<<blocksPerGrid, threadsPerBlock>>>(d_Pot0, d_Bx, d_By, d_Bz, nx, ny, nz, nynz, doubled_h);
+    err = cudaGetLastError();
+    if (err != cudaSuccess)
+    {
+        printf("[green.computeGradients]: CUDA Error: %s\n", cudaGetErrorString(err));
+        // return;
+    }
+
+    cudaMemcpy(Bx, d_Bx, nxnynz * sizeof(double), cudaMemcpyDeviceToHost);
+    cudaMemcpy(By, d_By, nxnynz * sizeof(double), cudaMemcpyDeviceToHost);
+    cudaMemcpy(Bz, d_Bz, nxnynz * sizeof(double), cudaMemcpyDeviceToHost);
+
+    cudaFree(d_Pot0);
+    cudaFree(d_Bx);
+    cudaFree(d_By);
+    cudaFree(d_Bz);
+
+    if ((streamw = fopen("B0.bin", "wb")) == NULL) {
+        printf("\n Error B0.bin");
+        exit(1);
+    }
+    fwrite(Bx, sizeof(double) * nxnynz, 1, streamw);
+    fwrite(By, sizeof(double) * nxnynz, 1, streamw);
+    fwrite(Bz, sizeof(double) * nxnynz, 1, streamw);
+    fclose(streamw);
+    printf("\n\n B written to B0.bin \n");
+
+}
+
+

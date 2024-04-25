@@ -47,3 +47,4 @@ extern int nxnynz1, nxnynz2, diagstep;
 #define GRADX(f, i) ((ix > 0 && ix < nx - 1) ? (MCENTERGRAD(f, nynz)) : ((ix == 0) ? (MLEFTGRAD(f, nynz)) : ((ix == nx - 1) ? (MRIGHTGRAD(f, nynz)) : (0.0))))
 #define GRADY(f, i) ((iy > 0 && iy < ny - 1) ? (MCENTERGRAD(f, nz)) : ((iy == 0) ? (MLEFTGRAD(f, nz)) : ((iy == ny - 1) ? (MRIGHTGRAD(f, nz)) : (0.0))))
 #define GRADZ(f, i) ((iz > 0 && iz < nz - 1) ? (MCENTERGRAD(f, 1)) : ((iz == 0) ? (MLEFTGRAD(f, 1)) : ((iz == nz - 1) ? (MRIGHTGRAD(f, 1)) : (0.0))))
+

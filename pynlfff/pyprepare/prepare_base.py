@@ -18,7 +18,8 @@ import os
 import pandas
 from astropy.io import fits
 import numpy
-from . import disambiguation
+# from . import disambiguation
+import disambiguation
 
 class PrepareWorker():
     
