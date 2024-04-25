@@ -73,7 +73,7 @@ bash  $NLFFF $PROJECTDIR $GRID
 
 
 # 项目文件夹
-PROJECTDIR=./
+PROJECTDIR=./project_dir
 
 # 运行等级，可选 1 12 123 23 2 3
 GRID=123
@@ -105,13 +105,16 @@ bash  $NLFFF $PROJECTDIR $GRID
 ```bash
 
 # 配置项目文件夹，要求里面有allboundaries123.dat grid123.ini mask123.dat boundary.ini etc.
-PROJECT=./
+PROJECT=./project_dir
 
 # 配置程序，具体程序路径，使用绝对路径
 PROGRAM=ROOT/compiled.gpu.nvcc.arm/fftpot4
 
 # 进入目录，因为有些是写死的文件路径
 cd $PROJECT
+
+# 配置程序需要的文件，因为有些文件路径是写死的，运行程序时需要改为指定文件名，如：
+# cp grid1.ini  grid.ini，具体需要改哪些文件名，可以参考multigrid.sh里面配置
 
 # 运行程序，参数可以参考multigrid.sh里面配置
 $PROJECT 参数
