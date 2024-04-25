@@ -7,17 +7,10 @@
 # NVCC = nvcc
 
 
-#  运行环境  a100 
-# LDFLAGS = -lm
-# CFLAGS = -O3 #-Wunused-parameter
-# NVCCFLAGS = -lib -O3 -arch=sm_80 # 假设GPU架构为sm_80，根据实际情况修改
-# CC = nvcc
-# NVCC = nvcc
-
-#  运行环境  通用
+#  运行环境  通用、a100 
 LDFLAGS = -lm
 CFLAGS = -O3 #-Wunused-parameter
-NVCCFLAGS = -lib -O3 # -arch=sm_80 # 假设GPU架构为sm_80，根据实际情况修改
+NVCCFLAGS = -lib -O3 # -arch=sm_80 # 假设GPU a100架构为sm_80，根据实际情况修改
 CC = nvcc
 NVCC = nvcc
 
