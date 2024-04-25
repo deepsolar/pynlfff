@@ -5,6 +5,9 @@
 ### 编译
 #### [可选]设置编译选项
 
+> 要求有gcc环境，如果并行要求有openmp环境，如果使用显卡要求有nvcc环境
+
+
 amd架构：
 
 编辑 init_compile_ps_amd.sh ， 选择编译哪些东西
@@ -14,7 +17,7 @@ arm架构：
 
 编辑 init_compile_ps_arm.sh ， 选择编译哪些东西
 
-> 要求有gcc环境，如果并行要求有openmp环境，如果使用显卡要求有nvcc环境
+
 
 
 #### 编译
@@ -32,7 +35,6 @@ bash ./init_compile_ps_arm.sh
 ```
 
 ### 运行
-
 
 #### 完整运行流程
 
@@ -92,6 +94,27 @@ bash  $NLFFF $PROJECTDIR $GRID
 # 1 workspace path, which allboundaries123.dat grid123.ini mask123.dat boundary.ini etc. in it
 # 2 which grid computer now, can be 1 12 123 2 23 3 , pay attenction if set 2 it has been run grid 1 before
 # and need other app compiled bin in root along with this
+
+```
+
+
+#### 运行单个程序
+
+以amd架构为例子
+
+```bash
+
+# 配置项目文件夹，要求里面有allboundaries123.dat grid123.ini mask123.dat boundary.ini etc.
+PROJECT=./
+
+# 配置程序，具体程序路径，使用绝对路径
+PROGRAM=ROOT/compiled.gpu.nvcc.arm/fftpot4
+
+# 进入目录，因为有些是写死的文件路径
+cd $PROJECT
+
+# 运行程序，参数可以参考multigrid.sh里面配置
+$PROJECT 参数
 
 ```
 
